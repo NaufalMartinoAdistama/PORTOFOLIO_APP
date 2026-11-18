@@ -1,0 +1,3683 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naufal Martino Adistama — Junior Web Developer Portfolio</title>
+  <meta name="description" content="Portofolio resmi Naufal Martino Adistama - Junior Web Developer, Full-Stack enthusiast, dan spesialis backend Laravel dari SMK PGRI 2 Ponorogo.">
+  <meta name="keywords" content="Naufal Martino Adistama, Web Developer, Laravel, PHP, React, Tailwind CSS, Ponorogo, Portofolio, Three.js">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb', // Aksen Biru Utama
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            slate: {
+              850: '#151e2e',
+              900: '#0F172A',
+            }
+          },
+          animation: {
+            'float-slow': 'float 6s ease-in-out infinite',
+            'float-reverse': 'floatRev 7s ease-in-out infinite',
+            'pulse-subtle': 'pulseSubtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            floatRev: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(10px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.85' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Three.js CDN for Interactive 3D Canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom Utilities & Clean White Aesthetic */
+    body {
+      background-color: #FFFFFF;
+      color: #0F172A;
+      overflow-x: hidden;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F8FAFC;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Ambient radial gradient */
+    .bg-ambient-light {
+      background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.04) 0%, rgba(255, 255, 255, 0) 70%);
+    }
+
+    /* Base Card Styling with smooth hardware-accelerated transforms */
+    .card-hover-effect, .project-card, .tilt-target {
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card-hover-effect:hover, .project-card:hover {
+      box-shadow: 0 16px 32px -10px rgba(37, 99, 235, 0.12), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+      border-color: #BFDBFE;
+    }
+
+    /* Dynamic Glare Layer for 3D Tilt Effect */
+    .card-glare {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(37, 99, 235, 0.08) 35%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 25;
+      mix-blend-mode: overlay;
+    }
+
+    /* Active link indicator */
+    .nav-link.active {
+      color: #2563EB;
+      font-weight: 600;
+    }
+
+    /* ThreeJS Absolute Canvas Containers */
+    #hero-canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* 3D Scroll Reveal Animation */
+    .reveal-3d {
+      opacity: 0;
+      transform: perspective(1000px) rotateX(-14deg) translateY(36px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-3d.active {
+      opacity: 1;
+      transform: perspective(1000px) rotateX(0deg) translateY(0px);
+    }
+
+    /* 3D Flip / Pop-in Animation for Project Filter */
+    @keyframes projectPopIn {
+      0% {
+        opacity: 0;
+        transform: perspective(900px) rotateY(-12deg) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(900px) rotateY(0deg) scale(1);
+      }
+    }
+    .animate-project-pop {
+      animation: projectPopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ======================================================== */
+    /* SPLASH PRELOADER KINETIC TYPOGRAPHY & CINEMATIC STYLES   */
+    /* ======================================================== */
+    #preloader-screen {
+      transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.85s ease;
+      will-change: transform;
+    }
+    #preloader-screen.exit-down {
+      transform: translateY(100%);
+      pointer-events: none;
+    }
+
+    .kinetic-text {
+      position: absolute;
+      font-size: clamp(3.6rem, 13.5vw, 9.5rem);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      line-height: 0.88;
+      color: #ffffff;
+      text-shadow: 0 10px 35px rgba(255, 255, 255, 0.4), 0 0 80px rgba(255, 255, 255, 0.2);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      user-select: none;
+      will-change: transform, opacity;
+      transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    }
+
+    /* Gelombang 1: NAUFAL (Kiri Atas -> Tengah -> Bawah) */
+    .kinetic-naufal-start {
+      transform: translate3d(-100vw, -70vh, 0) rotate(-10deg);
+      opacity: 0;
+    }
+    .kinetic-naufal-center {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+      opacity: 0.95;
+    }
+    .kinetic-naufal-exit {
+      transform: translate3d(0, 80vh, 0) rotate(6deg);
+      opacity: 0;
+    }
+
+    /* Gelombang 2: MARTINO (Kanan Atas -> Tengah -> Bawah) */
+    .kinetic-martino-start {
+      transform: translate3d(100vw, -70vh, 0) rotate(10deg);
+      opacity: 0;
+    }
+    .kinetic-martino-center {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+      opacity: 0.95;
+    }
+    .kinetic-martino-exit {
+      transform: translate3d(0, 80vh, 0) rotate(-6deg);
+      opacity: 0;
+    }
+
+    /* Gelombang 3: ADISTAMA (Atas -> Bawah Tengah Belakang Foto) */
+    .kinetic-adistama-start {
+      transform: translate3d(0, -80vh, 0) scale(0.85);
+      opacity: 0;
+    }
+    .kinetic-adistama-center {
+      transform: translate3d(0, 12vh, 0) scale(1);
+      opacity: 0.9;
+    }
+
+
+    /* ======================================================== */
+    /* MOBILE CURVED FLOATING BOTTOM NAVIGATION BAR STYLES      */
+    /* ======================================================== */
+    .mobile-bottom-tab {
+      position: relative;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    .mobile-bottom-tab .tab-icon-wrapper {
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .mobile-bottom-tab .tab-label {
+      transition: all 0.25s ease;
+    }
+
+    /* Active State: Elevated Floating Circle with Curved Scoop Aesthetic */
+    .mobile-bottom-tab.active .tab-icon-wrapper {
+      transform: translateY(-16px) scale(1.15);
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: #FFFFFF;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.42);
+      border: 4px solid #FFFFFF;
+      width: 48px;
+      height: 48px;
+    }
+
+    .mobile-bottom-tab.active .tab-label {
+      color: #2563EB;
+      font-weight: 700;
+      transform: translateY(-8px);
+    }
+
+    .mobile-bottom-tab:not(.active) .tab-icon-wrapper {
+      color: #94A3B8;
+      background: transparent;
+    }
+
+    .mobile-bottom-tab:not(.active):hover .tab-icon-wrapper {
+      color: #2563EB;
+      transform: translateY(-2px);
+    }
+
+  </style>
+</head>
+<body class="bg-white text-slate-900 font-sans antialiased selection:bg-blue-100 selection:text-blue-700 overflow-hidden pb-20 md:pb-0">
+
+  <!-- ======================================================== -->
+  <!-- 0. SPLASH LOADING SCREEN SINEMATIK (10 DETIK)            -->
+  <!-- ======================================================== -->
+  <div id="preloader-screen" class="fixed inset-0 z-[99999] bg-black text-white flex flex-col items-center justify-center overflow-hidden select-none">
+    
+    <!-- Deep Vignette & Subtle Ambient Radial Glow -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.12)_0%,rgba(0,0,0,0.85)_65%,#000000_100%)] pointer-events-none"></div>
+
+    <!-- 1. Background Alternating Kinetic Typography (z-10, behind photo) -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10 overflow-hidden">
+      <div id="preloader-text-naufal" class="kinetic-text kinetic-naufal-start font-sans font-black tracking-tighter">
+        NAUFAL
+      </div>
+      <div id="preloader-text-martino" class="kinetic-text kinetic-martino-start font-sans font-black tracking-tighter">
+        MARTINO
+      </div>
+      <div id="preloader-text-adistama" class="kinetic-text kinetic-adistama-start font-sans font-black tracking-tighter">
+        ADISTAMA
+      </div>
+    </div>
+
+    <!-- 2. Central Element: Profile Photo & Name/Role (z-20) -->
+    <div class="relative z-20 flex flex-col items-center text-center px-4 max-w-lg mx-auto">
+      
+      <!-- Cutout Standing Profile Photo (Tanpa Bingkai) -->
+      <div id="preloader-photo-card" class="relative flex items-center justify-center transform scale-75 opacity-0 blur-md transition-all duration-1000 ease-out">
+        <img src="profile-cutout.png" 
+             alt="Foto Naufal Martino Adistama" 
+             class="h-[38vh] sm:h-[44vh] md:h-[48vh] max-h-[380px] w-auto object-contain drop-shadow-[0_15px_40px_rgba(255,255,255,0.35)] select-none pointer-events-none">
+      </div>
+
+      <!-- Name & Role Under Photo -->
+      <div id="preloader-name-role" class="mt-6 opacity-0 transform translate-y-3 transition-all duration-700 ease-out">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white font-mono drop-shadow-md">
+          Naufal Martino Adistama
+        </h2>
+        <p class="text-sm sm:text-base text-slate-300 font-semibold tracking-wider mt-1.5 drop-shadow-sm">
+          Junior Web Developer · SMK PGRI 2 Ponorogo
+        </p>
+      </div>
+
+    </div>
+
+    <!-- 3. Bottom Progress Bar & Real-Time Status Indicator (z-30) -->
+    <div class="absolute bottom-8 sm:bottom-12 inset-x-0 z-30 flex flex-col items-center px-6">
+      
+      <!-- Status Text & Percentage -->
+      <div class="w-64 sm:w-80 flex items-center justify-between text-xs font-mono mb-2.5">
+        <span id="preloader-status-text" class="text-slate-400 truncate pr-2 text-[11px] sm:text-xs">
+          Memuat Foto &amp; Identitas Visual...
+        </span>
+        <span id="preloader-progress-text" class="text-white font-bold tracking-wider">
+          0%
+        </span>
+      </div>
+
+      <!-- Progress Track & Fill -->
+      <div class="w-64 sm:w-80 h-1.5 bg-white/15 rounded-full overflow-hidden p-0.5 backdrop-blur-sm border border-white/10">
+        <div id="preloader-progress-fill" 
+             class="h-full bg-white rounded-full shadow-[0_0_14px_#ffffff] transition-all duration-150 ease-out" 
+             style="width: 0%;"></div>
+      </div>
+
+      <!-- Micro Brand Footer Indicator -->
+      <p class="text-[10px] text-white/40 tracking-widest uppercase mt-3 font-mono">
+        SMK PGRI 2 PONOROGO · 2026
+      </p>
+
+    </div>
+
+    <!-- 4. Skip Button (Appears after 2.5s) -->
+    <button id="preloader-skip-btn" 
+            onclick="skipPreloaderIntro()" 
+            class="fixed bottom-24 md:bottom-6 right-5 z-40 px-4 py-2 rounded-full border border-white/25 text-white/80 hover:bg-white hover:text-black transition-all duration-300 text-xs font-mono tracking-wider flex items-center gap-1.5 opacity-0 pointer-events-none hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+      <span>Lewati Intro</span>
+      <i class="fa-solid fa-forward-step text-[10px]"></i>
+    </button>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- 1. NAVBAR (Sticky White Glassmorphism)                   -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200 transition-all duration-300 shadow-sm" id="main-navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo Kiri -->
+        <a href="#home" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-xl p-1">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300">
+            <i class="fa-solid fa-code text-lg"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+              Naufal<span class="text-blue-600">.dev</span>
+            </span>
+            <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-500 -mt-1">
+              Junior Web Developer
+            </span>
+          </div>
+        </a>
+
+        <!-- Menu Navigasi Tengah (Desktop) -->
+        <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+          <a href="#home" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors active">Home</a>
+          <a href="#about" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors">About</a>
+          <a href="#skills" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors">Skills</a>
+          <a href="#projects" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors">Projects</a>
+          <a href="#pendidikan" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors">Pendidikan</a>
+          <a href="#contact" class="nav-link px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors">Contact</a>
+        </nav>
+
+        <!-- Aksi Kanan (CTA Button & Mobile Toggle) -->
+        <div class="flex items-center gap-3">
+          <!-- CTA WhatsApp Button -->
+          <a href="https://wa.me/6282336802600?text=Halo%20Naufal,%20saya%20tertarik%20bekerja%20sama%20dengan%20Anda" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="hidden sm:inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md hover:shadow-blue-500/20 active:scale-95 transition-all duration-200">
+            <span>Let's Talk</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-btn" 
+                  type="button" 
+                  class="md:hidden inline-flex items-center justify-center p-2.5 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  aria-label="Buka navigasi mobile">
+            <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md px-4 pt-3 pb-5 space-y-2 shadow-lg transition-all">
+      <a href="#home" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Home</a>
+      <a href="#about" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">About</a>
+      <a href="#skills" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Skills</a>
+      <a href="#projects" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Projects</a>
+      <a href="#pendidikan" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Pendidikan</a>
+      <a href="#contact" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Contact</a>
+      <div class="pt-2">
+        <a href="https://wa.me/6282336802600?text=Halo%20Naufal,%20saya%20tertarik%20bekerja%20sama%20dengan%20Anda" 
+           target="_blank" 
+           class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-sm text-sm">
+          <span>Let's Talk via WhatsApp</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ======================================================== -->
+  <!-- 2. HERO SECTION (Latar Putih + Three.js 3D Interaktif)   -->
+  <!-- ======================================================== -->
+  <section id="home" class="relative min-h-[calc(100vh-80px)] flex items-center justify-center py-16 sm:py-24 bg-white overflow-hidden">
+    
+    <!-- Three.js Canvas Container (Enhanced Interactive 3D Geometry with Scroll Morphing) -->
+    <div id="hero-canvas-container" class="opacity-95"></div>
+
+    <!-- Soft Radial Gradient Accent in background -->
+    <div class="absolute inset-0 bg-ambient-light pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Kolom Kiri: Informasi Hero -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+          
+          <!-- Badge Sambutan -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 shadow-sm animate-pulse-subtle">
+            <span class="inline-block w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
+            <span>👋 HALO, SAYA</span>
+          </div>
+
+          <!-- Judul Utama & Nama -->
+          <div class="space-y-2">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+              Naufal Martino <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Adistama</span>
+            </h1>
+            
+            <!-- Dynamic Role with Typing Effect -->
+            <div class="text-xl sm:text-2xl font-bold text-slate-700 flex items-center justify-center lg:justify-start gap-2 h-9">
+              <span class="text-blue-600 font-mono" id="typing-role">Junior Web Developer</span>
+              <span class="w-2.5 h-6 bg-blue-600 inline-block animate-pulse"></span>
+            </div>
+          </div>
+
+          <!-- Deskripsi & Fokus Belajar -->
+          <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            Saya adalah seorang <strong class="text-slate-800 font-semibold">Junior Developer</strong> yang bersemangat membangun website modern, fungsional, dan responsif. Saat ini saya sedang fokus mempelajari pengembangan aplikasi web Full-Stack, arsitektur backend dengan Laravel, desain antarmuka (UI/UX) yang ramah pengguna, serta pemanfaatan teknologi <strong class="text-blue-600 font-semibold">AI Agent</strong> untuk meningkatkan produktivitas dan efisiensi pengembangan perangkat lunak.
+          </p>
+
+          <!-- Tombol Aksi Utama -->
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#projects" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 transition-all duration-200">
+              <span>Lihat Project</span>
+              <i class="fa-solid fa-arrow-down text-sm"></i>
+            </a>
+            <a href="#contact" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 font-medium px-6 py-3.5 rounded-xl border border-slate-300 hover:border-blue-300 shadow-sm active:scale-95 transition-all duration-200">
+              <span>Hubungi Saya</span>
+              <i class="fa-regular fa-paper-plane text-sm"></i>
+            </a>
+          </div>
+
+          <!-- Deretan Sosial Media & Status -->
+          <div class="pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 text-slate-600">
+            <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Terhubung dengan saya:</span>
+            <div class="flex items-center gap-3">
+              <!-- GitHub -->
+              <a href="https://github.com/NaufalMartinoAdistama" target="_blank" rel="noopener noreferrer" 
+                 class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-600 flex items-center justify-center transition-all duration-200 shadow-sm"
+                 title="GitHub Profile">
+                <i class="fa-brands fa-github text-lg"></i>
+              </a>
+              <!-- GitLab -->
+              <a href="https://gitlab.com/naufalnazeera22" target="_blank" rel="noopener noreferrer" 
+                 class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-300 text-slate-700 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm"
+                 title="GitLab Profile">
+                <i class="fa-brands fa-gitlab text-lg"></i>
+              </a>
+              <!-- LinkedIn -->
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
+                 class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-600 flex items-center justify-center transition-all duration-200 shadow-sm"
+                 title="LinkedIn Profile">
+                <i class="fa-brands fa-linkedin-in text-lg"></i>
+              </a>
+              <!-- WhatsApp -->
+              <a href="https://wa.me/6282336802600?text=Halo%20Naufal,%20saya%20melihat%20portofolio%20Anda" target="_blank" rel="noopener noreferrer" 
+                 class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-600 flex items-center justify-center transition-all duration-200 shadow-sm"
+                 title="Direct WhatsApp">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Kolom Kanan: Foto Profil & 3D Interactive Tilt Card -->
+        <div class="lg:col-span-5 flex justify-center relative">
+          <div class="relative w-72 sm:w-80 md:w-[350px] aspect-[4/5] max-w-full">
+            
+            <!-- Background Circular Glow -->
+            <div class="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-100 to-indigo-100 blur-2xl opacity-75 -z-10 transform scale-105"></div>
+            
+            <!-- Main Photo Card Frame with 3D Tilt Effect -->
+            <div id="hero-photo-card" class="tilt-target w-full h-full rounded-3xl bg-white border-2 border-slate-200 shadow-xl overflow-hidden p-2.5 relative flex items-center justify-center cursor-pointer">
+              
+              <!-- Inner Photo Container -->
+              <div class="w-full h-full rounded-2xl bg-slate-100 overflow-hidden relative group shadow-inner flex items-center justify-center">
+                <img id="hero-profile-img" 
+                     src="profile.jpg" 
+                     alt="Foto Profil Naufal Martino Adistama" 
+                     class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out">
+                
+                <!-- Overlay Gradient & Caption -->
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/85 via-slate-900/15 to-transparent flex flex-col justify-end p-5 text-white pointer-events-none">
+                  <div class="transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
+                    <span class="inline-block px-2.5 py-0.5 rounded-md bg-blue-600/90 text-[10px] font-bold uppercase tracking-wider text-white mb-1.5 backdrop-blur-sm">
+                      Full-Stack Dev
+                    </span>
+                    <h3 class="text-lg font-bold text-white leading-tight drop-shadow-sm">Naufal Martino A.</h3>
+                    <p class="text-xs text-slate-200 font-medium drop-shadow-sm">SMK PGRI 2 Ponorogo</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Floating Glass Badge 1: Open to Work -->
+            <div class="absolute -bottom-4 -left-3 sm:-left-6 bg-white/95 backdrop-blur-md border border-slate-200 px-4 py-2.5 rounded-2xl shadow-lg flex items-center gap-3 animate-float-slow z-20 pointer-events-none">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <div>
+                <p class="text-[11px] font-bold text-slate-900 leading-none">Open to Work</p>
+                <p class="text-[10px] text-slate-500 font-medium">Internship &amp; Collaboration</p>
+              </div>
+            </div>
+
+            <!-- Floating Glass Badge 2: Tech Trainee -->
+            <div class="absolute -top-4 -right-3 sm:-right-6 bg-white/95 backdrop-blur-md border border-slate-200 px-4 py-2.5 rounded-2xl shadow-lg flex items-center gap-3 animate-float-reverse z-20 pointer-events-none">
+              <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+                <i class="fa-solid fa-award"></i>
+              </div>
+              <div>
+                <p class="text-[11px] font-bold text-slate-900 leading-none">AGIT CAP Trainee</p>
+                <p class="text-[10px] text-slate-500 font-medium">Competence Aid Program</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- 3. ABOUT SECTION (Tentang Saya & Nilai Belajar)           -->
+  <!-- ======================================================== -->
+  <section id="about" class="py-20 sm:py-28 bg-white border-t border-slate-200/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal-3d">
+        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 mb-3">
+          TENTANG SAYA
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Dedikasi &amp; Passion di Dunia Software Engineering
+        </h2>
+        <p class="mt-4 text-base sm:text-lg text-slate-600">
+          Mengenal perjalanan, pola pikir, dan visi saya dalam membangun solusi digital yang bermanfaat.
+        </p>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Kolom Cerita / Narasi -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm card-hover-effect">
+            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2.5 mb-4">
+              <i class="fa-solid fa-user-graduate text-blue-600"></i>
+              <span>Profil &amp; Latar Belakang</span>
+            </h3>
+            <div class="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+              <p>
+                Halo! Nama saya <strong>Naufal Martino Adistama</strong>, seorang siswa jurusan <strong>Rekayasa Perangkat Lunak (RPL)</strong> di <strong>SMK PGRI 2 Ponorogo</strong>. Ketertarikan saya pada dunia pemrograman berawal dari rasa ingin tahu bagaimana sebuah website dan sistem digital dapat menyederhanakan aktivitas ribuan orang.
+              </p>
+              <p>
+                Saya tidak hanya mempelajari sintaks kode, tetapi juga memahami arsitektur di baliknya—mulai dari bagaimana data diproses di backend menggunakan <strong>PHP &amp; Laravel</strong>, bagaimana database <strong>MySQL</strong> dirancang secara optimal, hingga bagaimana antarmuka pengguna dapat disajikan secara bersih, cepat, dan intuitif.
+              </p>
+              <p>
+                Di era teknologi modern, saya aktif memanfaatkan <strong>AI Agent</strong> dan LLM workflow sebagai akselerator riset, debugging, dan eksplorasi ide tanpa mengesampingkan pemahaman fundamental logika pemrograman.
+              </p>
+            </div>
+
+            <!-- Quote Ringkas -->
+            <div class="mt-6 pt-6 border-t border-slate-100 flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-quote-left"></i>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-500 italic font-mono">
+                "Menulis kode bukan sekadar membuat program berjalan, melainkan membangun solusi yang terstruktur, mudah dirawat, dan relevan."
+              </p>
+            </div>
+          </div>
+
+          <!-- Highlight 4 Pilar Prinsip Kerja -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="reveal-3d bg-white border border-slate-200 rounded-2xl p-5 shadow-sm card-hover-effect">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 text-base">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm mb-1">Fast Learner &amp; Adaptif</h4>
+              <p class="text-xs text-slate-600 leading-normal">
+                Cepat menyerap teknologi baru, dokumentasi resmi framework, serta best practices terkini.
+              </p>
+            </div>
+
+            <div class="reveal-3d bg-white border border-slate-200 rounded-2xl p-5 shadow-sm card-hover-effect">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 text-base">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm mb-1">Database Oriented</h4>
+              <p class="text-xs text-slate-600 leading-normal">
+                Fokus pada integritas data, relasi normalisasi, indexing B-Tree, dan efisiensi query.
+              </p>
+            </div>
+
+            <div class="reveal-3d bg-white border border-slate-200 rounded-2xl p-5 shadow-sm card-hover-effect">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 text-base">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm mb-1">Clean Code Architecture</h4>
+              <p class="text-xs text-slate-600 leading-normal">
+                Menerapkan pola MVC rapi, penamaan variabel jelas, dan struktur komponen modular.
+              </p>
+            </div>
+
+            <div class="reveal-3d bg-white border border-slate-200 rounded-2xl p-5 shadow-sm card-hover-effect">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 text-base">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm mb-1">AI-Enhanced Workflow</h4>
+              <p class="text-xs text-slate-600 leading-normal">
+                Memadukan kapabilitas AI Agent untuk otomasi pengujian, dokumentasi, dan produktivitas tinggi.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Kolom Statistik & Quick Fact Card -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Metrik Angka Stat (Real-Time Live Counter & Clock) -->
+          <div id="stats-realtime-card" class="reveal-3d bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-blue-500/15 relative overflow-hidden card-hover-effect">
+            <!-- Background subtle glow circle -->
+            <div class="absolute -right-12 -top-12 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between mb-6 relative z-10">
+              <h4 class="text-xs uppercase tracking-wider font-semibold text-blue-200">
+                Ringkasan Rekam Jejak
+              </h4>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/15 text-white backdrop-blur-sm border border-white/20 shadow-xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>LIVE REAL-TIME</span>
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 relative z-10">
+              <!-- Item 1: Proyek Selesai -->
+              <div class="border-b border-blue-400/30 pb-4">
+                <div class="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight flex items-baseline">
+                  <span class="stat-counter" data-target="10">0</span><span class="text-blue-200">+</span>
+                </div>
+                <div class="text-xs text-blue-100 font-medium mt-1">Proyek &amp; Lab Selesai</div>
+              </div>
+
+              <!-- Item 2: Komitmen Belajar -->
+              <div class="border-b border-blue-400/30 pb-4">
+                <div class="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight flex items-baseline">
+                  <span class="stat-counter" data-target="100">0</span><span class="text-blue-200">%</span>
+                </div>
+                <div class="text-xs text-blue-100 font-medium mt-1">Komitmen Belajar</div>
+              </div>
+
+              <!-- Item 3: Sertifikasi & Magang -->
+              <div class="pt-2">
+                <div class="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight flex items-baseline">
+                  <span class="stat-counter" data-target="3">0</span><span class="text-blue-200">+</span>
+                </div>
+                <div class="text-xs text-blue-100 font-medium mt-1">Sertifikasi &amp; Magang</div>
+              </div>
+
+              <!-- Item 4: Real-Time Live Clock & 24/7 Status -->
+              <div class="pt-2">
+                <div class="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight flex items-baseline gap-1">
+                  <span id="realtime-clock" class="text-white">00:00:00</span>
+                  <span class="text-[11px] font-semibold text-blue-200 font-sans">WIB</span>
+                </div>
+                <div class="text-xs text-blue-100 font-medium mt-1 flex items-center gap-1.5">
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                  </span>
+                  <span>24/7 Live Time (Ponorogo)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Real-Time Live Status Bar -->
+            <div class="mt-6 pt-4 border-t border-blue-400/30 flex items-center justify-between text-xs text-blue-100 relative z-10">
+              <span class="flex items-center gap-1.5 text-[11px]">
+                <i class="fa-solid fa-location-dot text-blue-300"></i>
+                <span id="realtime-date">Memuat tanggal...</span>
+              </span>
+              <span id="realtime-status-pill" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-400/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online / Ready
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Information Card -->
+          <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm card-hover-effect">
+            <h4 class="text-base font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100 flex items-center justify-between">
+              <span>Informasi Singkat</span>
+              <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Biodata</span>
+            </h4>
+            <ul class="space-y-3.5 text-sm">
+              <li class="flex items-center justify-between">
+                <span class="text-slate-500">Nama Lengkap:</span>
+                <span class="font-semibold text-slate-800">Naufal Martino Adistama</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="text-slate-500">Status:</span>
+                <span class="font-semibold text-slate-800">Pelajar RPL (SMK PGRI 2)</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="text-slate-500">Lokasi:</span>
+                <span class="font-semibold text-slate-800">Ponorogo, Jawa Timur, ID</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="text-slate-500">Fokus Utama:</span>
+                <span class="font-semibold text-blue-600">Full-Stack &amp; Laravel</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span class="text-slate-500">Ketersediaan:</span>
+                <span class="inline-flex items-center gap-1.5 font-semibold text-emerald-600">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Magang / Proyek
+                </span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- 4. SKILLS & TECHNOLOGIES SECTION                         -->
+  <!-- ======================================================== -->
+  <section id="skills" class="py-20 sm:py-28 bg-slate-50/60 border-t border-slate-200/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal-3d">
+        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 mb-3">
+          KEAHLIAN TEKNIS
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Teknologi &amp; Toolset yang Saya Gunakan
+        </h2>
+        <p class="mt-4 text-base sm:text-lg text-slate-600">
+          Kumpulan keahlian dalam bahasa pemrograman, framework modern, basis data, dan alat produktivitas kerja.
+        </p>
+      </div>
+
+      <!-- Skills Grid (White Cards with subtle border & dynamic animated progress bar) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Skill 1: PHP & Laravel 12 -->
+        <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-brands fa-laravel"></i>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                Advanced · 90%
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">PHP &amp; Laravel 12</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+              Arsitektur MVC, Eloquent ORM, Blade templating, authentication, middleware, dan RESTful controller.
+            </p>
+          </div>
+          <div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="skill-progress-bar bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="90%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill 2: MySQL & Database Optimization -->
+        <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                Advanced · 88%
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">MySQL / MariaDB</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+              Relational design, B-Tree Indexing, Stored Procedures, Triggers, Foreign Keys, dan optimasi query.
+            </p>
+          </div>
+          <div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="skill-progress-bar bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="88%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill 3: HTML5, CSS3 & Tailwind CSS -->
+        <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-brands fa-css3-alt"></i>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                Advanced · 90%
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">HTML5 &amp; Tailwind CSS</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+              Desain modern responsif, mobile-first design, layout flexbox/grid, CSS animations, dan semantik web.
+            </p>
+          </div>
+          <div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="skill-progress-bar bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="90%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill 4: JavaScript & React -->
+        <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-brands fa-js"></i>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                Intermediate · 80%
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">JavaScript &amp; React</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+              Modern ES6+, DOM manipulation, fetch API, asynchronous programming, komponen React, dan hooks.
+            </p>
+          </div>
+          <div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="skill-progress-bar bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="80%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill 5: RESTful API & Inertia.js -->
+        <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-solid fa-network-wired"></i>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                Intermediate · 82%
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">RESTful API &amp; Inertia.js</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+              Jembatan monolitik modern antara Laravel dan frontend SPA, token authentication, dan JSON responses.
+            </p>
+          </div>
+          <div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="skill-progress-bar bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="82%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill 6: Git, GitHub, GitLab & Server Tools -->
+        <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-brands fa-git-alt"></i>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                Intermediate · 85%
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">Git, Docker &amp; Nginx</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+              Version control (branching, commits, pull requests), XAMPP local environment, dasar container &amp; web server.
+            </p>
+          </div>
+          <div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div class="skill-progress-bar bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="85%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 3D INTERACTIVE AI AGENTS & TECH SHOWCASE CARD             -->
+      <!-- ======================================================== -->
+      <div class="mt-8 reveal-3d">
+        <div class="bg-white border-2 border-slate-200/90 rounded-3xl p-6 sm:p-9 shadow-md card-hover-effect relative overflow-hidden group">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            
+            <!-- Left: Content & Badges -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-xs">
+                <i class="fa-solid fa-microchip text-indigo-600"></i>
+                <span>AI AGENTS &amp; MODERN DEV WORKFLOW</span>
+              </div>
+              
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                AI-Powered Engineering &amp; Modern UI/UX
+              </h3>
+              
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Mengeksplorasi ekosistem <strong>AI Agent &amp; LLM Orchestration</strong> untuk mempercepat penulisan kode, riset algoritma, pembuatan unit test, serta perancangan antarmuka pengguna (UI/UX) yang ramah pengguna.
+              </p>
+
+              <!-- Features Grid inside card -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                  <div class="flex items-center gap-2 font-bold text-slate-900 text-xs mb-1">
+                    <i class="fa-solid fa-robot text-blue-600"></i>
+                    <span>AI Agent Orchestration</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500">Antigravity, Claude Code, Gemini CLI, automated workflows.</p>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                  <div class="flex items-center gap-2 font-bold text-slate-900 text-xs mb-1">
+                    <i class="fa-brands fa-figma text-rose-500"></i>
+                    <span>Design to Production</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500">Figma to responsive Tailwind CSS, clean semantic layout.</p>
+                </div>
+              </div>
+
+              <!-- Tech Pills -->
+              <div class="flex flex-wrap gap-2 pt-2">
+                <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100 flex items-center gap-1.5">
+                  <i class="fa-solid fa-bolt text-blue-600"></i> DeepSeek &amp; Gemini
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-semibold border border-purple-100 flex items-center gap-1.5">
+                  <i class="fa-solid fa-brain text-purple-600"></i> ChatGPT &amp; Claude
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-100 flex items-center gap-1.5">
+                  <i class="fa-solid fa-cubes text-emerald-600"></i> Antigravity Agent
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 flex items-center gap-1.5">
+                  <i class="fa-solid fa-terminal text-slate-800"></i> Modern Tooling
+                </span>
+              </div>
+            </div>
+
+            <!-- Right: 3D Interactive AI Neural Node Canvas -->
+            <div class="lg:col-span-5 flex justify-center items-center relative">
+              <div class="w-full h-64 sm:h-72 rounded-2xl bg-gradient-to-tr from-slate-50 via-blue-50/30 to-indigo-50/40 border border-slate-200/80 relative overflow-hidden flex items-center justify-center shadow-inner">
+                
+                <!-- 3D Canvas Container -->
+                <div id="skills-ai-canvas-container" class="absolute inset-0 w-full h-full pointer-events-none"></div>
+
+                <!-- Floating Label in 3D Card -->
+                <div class="absolute bottom-3 right-3 z-10 px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-sm border border-slate-200 text-[10px] font-mono font-semibold text-slate-600 shadow-xs flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
+                  <span>3D Neural Octahedron</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- 5. SELECTED PROJECTS SECTION                             -->
+  <!-- ======================================================== -->
+  <section id="projects" class="py-20 sm:py-28 bg-white border-t border-slate-200/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal-3d">
+        <div class="max-w-2xl">
+          <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 mb-3">
+            PORTOFOLIO TERPILIH
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Proyek Unggulan (GitLab &amp; GitHub)
+          </h2>
+          <p class="mt-3 text-base text-slate-600">
+            Kumpulan aplikasi web dan RESTful API nyata. Klik tombol repositori untuk membuka langsung kode sumber di GitLab atau GitHub.
+          </p>
+        </div>
+
+        <!-- Filter Buttons & Live Search Box -->
+        <div class="mt-6 md:mt-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          
+          <!-- Live Search Input Bar -->
+          <div class="relative min-w-[200px] sm:w-60">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </span>
+            <input type="text" id="project-search-input" placeholder="Cari: github, kasir, api..." 
+                   class="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-xs text-slate-800 placeholder-slate-400 outline-none transition-all shadow-xs bg-slate-50/50">
+          </div>
+
+          <!-- Buttons Filter -->
+          <div class="flex flex-wrap items-center gap-2" id="project-filters">
+            <button data-filter="all" class="filter-btn active px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white shadow-sm transition-all">Semua (8)</button>
+            <button data-filter="github" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1.5">
+              <i class="fa-brands fa-github text-slate-900"></i> GitHub (2)
+            </button>
+            <button data-filter="gitlab" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab (6)
+            </button>
+            <button data-filter="pos" class="filter-btn px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Kasir/POS</button>
+            <button data-filter="backend" class="filter-btn px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">API</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Projects Grid (8 Projects - All Pure White Cards) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-grid">
+        
+        <!-- Empty State Notif -->
+        <div id="no-projects-found" class="hidden col-span-1 md:col-span-2 py-12 text-center text-slate-500 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+          <div class="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-200 text-slate-400 flex items-center justify-center mx-auto mb-3 text-lg">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <p class="font-bold text-slate-800 text-sm">Tidak ada proyek yang cocok</p>
+          <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci lain atau klik tombol <button onclick="resetProjectFilters()" class="text-blue-600 underline font-semibold">Semua (8)</button></p>
+        </div>
+        
+        <!-- Project 1: PERPUSTAKAAN_API (GitLab) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="gitlab backend">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-indigo-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 shadow-xs">
+                <i class="fa-brands fa-gitlab text-orange-600"></i> GitLab
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                REST API
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-server"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">PERPUSTAKAAN_API</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Layanan RESTful API Sistem Perpustakaan Digital</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Layanan backend API terstruktur untuk sirkulasi buku perpustakaan. Menyediakan endpoint katalog literatur, autentikasi pengguna, pagination data efisien, dan response standar JSON.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">PHP / Laravel</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">REST API</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">JSON API</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://gitlab.com/naufalnazeera22/perpustakaan-api" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-orange-500/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+                <span>Buka di GitLab ↗</span>
+              </a>
+              <button onclick="openProjectModal('perpustakaan_api')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: MINI KASIR_APP (GitLab) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="gitlab pos fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-blue-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 shadow-xs">
+                <i class="fa-brands fa-gitlab text-orange-600"></i> GitLab
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                POS System
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-cash-register"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">MINI KASIR_APP</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Kasir Penjualan Toko &amp; Manajemen Transaksi</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Aplikasi kasir minimarket modern untuk kecepatan transaksi. Menangani pemindaian produk, kalkulasi diskon &amp; kembalian otomatis, serta rekapitulasi data penjualan harian toko.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">PHP</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700 border border-sky-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100">JavaScript</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">Cashier POS</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://gitlab.com/naufalnazeera22/mini-kasir-app" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-orange-500/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+                <span>Buka di GitLab ↗</span>
+              </a>
+              <button onclick="openProjectModal('mini_kasir_app')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: TOKO ROTI (GitLab) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="gitlab fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-amber-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 shadow-xs">
+                <i class="fa-brands fa-gitlab text-orange-600"></i> GitLab
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                Bakery E-Commerce
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-bread-slice"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">TOKO ROTI</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Pemesanan &amp; Katalog Produk Bakery Online</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Platform katalog dan pemesanan roti online. Menyajikan visual produk roti, sistem keranjang belanja interaktif, kalkulasi total pesanan, serta manajemen stok untuk pemilik toko.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-orange-50 text-orange-700 border border-orange-100">PHP / Laravel</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">JavaScript</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">Order System</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://gitlab.com/naufalnazeera22/apk-toko-roti" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-orange-500/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+                <span>Buka di GitLab ↗</span>
+              </a>
+              <button onclick="openProjectModal('toko_roti')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4: RENTAL MOBIL (GitLab) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="gitlab fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-sky-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 shadow-xs">
+                <i class="fa-brands fa-gitlab text-orange-600"></i> GitLab
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                Car Rental
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-200 text-sky-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-car-side"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">RENTAL MOBIL</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Informasi &amp; Manajemen Persewaan Kendaraan</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Aplikasi manajemen sewa armada mobil. Dilengkapi katalog kendaraan, pengecekan ketersediaan unit mobil realtime, perhitungan durasi &amp; tarif rental, dan pencatatan data penyewa.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700 border border-sky-100">PHP</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">Bootstrap 5</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">Fleet System</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://gitlab.com/naufalnazeera22/rentalmobil" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-orange-500/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+                <span>Buka di GitLab ↗</span>
+              </a>
+              <button onclick="openProjectModal('rental_mobil')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 5: E COMPLAINT MASYARAKAT (GitLab) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="gitlab fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-rose-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 shadow-xs">
+                <i class="fa-brands fa-gitlab text-orange-600"></i> GitLab
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                Layanan Publik
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">E COMPLAINT MASYARAKAT</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Pengaduan &amp; Aspirasi Warga Berbasis Web</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Platform aspirasi dan pengaduan layanan publik. Memfasilitasi masyarakat untuk mengirim laporan kendala lingkungan, upload bukti pendukung, serta melacak status penanganan dari petugas.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-100">PHP</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100">JavaScript</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">Public Complaints</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://gitlab.com/naufalnazeera22/ecomplin-masyarakat" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-orange-500/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+                <span>Buka di GitLab ↗</span>
+              </a>
+              <button onclick="openProjectModal('ecomplaint')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 6: APLIKASI PENDUDUK DESA (GitLab) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="gitlab fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-emerald-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 shadow-xs">
+                <i class="fa-brands fa-gitlab text-orange-600"></i> GitLab
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Administrasi Desa
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-users-rectangle"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">APLIKASI PENDUDUK DESA</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Informasi Administrasi &amp; Demografi Warga Desa</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Sistem informasi pendataan warga untuk kantor desa. Mengelola data Kartu Keluarga (KK), pencatatan kelahiran, kematian, mutasi pindah, serta laporan demografi kependudukan otomatis.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">PHP</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">DataTables</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-100">Village System</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://gitlab.com/naufalnazeera22/aplikasi-penduduk-desa" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-orange-500/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+                <span>Buka di GitLab ↗</span>
+              </a>
+              <button onclick="openProjectModal('penduduk_desa')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 7: APLIKASI PERPUSTAKAAN (GitHub) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="github fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-blue-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200 shadow-xs">
+                <i class="fa-brands fa-github text-slate-900"></i> GitHub
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                Perpustakaan
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-book-bookmark"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">APLIKASI PERPUSTAKAAN</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Informasi Manajemen Katalog &amp; Sirkulasi Buku</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Aplikasi manajemen buku perpustakaan sekolah. Dilengkapi pencarian koleksi interaktif, kategori literatur, pencatatan peminjaman, serta status ketersediaan stok fisik buku di rak.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-orange-50 text-orange-700 border border-orange-100">HTML5</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">CSS3</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100">JavaScript</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">MySQL</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://github.com/NaufalMartinoAdistama/perpustakaan" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-slate-900 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-slate-900/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-github text-sm"></i>
+                <span>Buka di GitHub ↗</span>
+              </a>
+              <button onclick="openProjectModal('aplikasi_perpustakaan')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 8: APLIKASI KASIR_POS (GitHub) -->
+        <div class="reveal-3d project-card bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm card-hover-effect flex flex-col justify-between" data-category="github pos fullstack">
+          <!-- White Header -->
+          <div class="p-6 pb-5 bg-gradient-to-b from-purple-50/50 via-white to-white border-b border-slate-100 flex flex-col justify-between relative group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200 shadow-xs">
+                <i class="fa-brands fa-github text-slate-900"></i> GitHub
+              </span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                Kasir POS Pro
+              </span>
+            </div>
+            <div>
+              <div class="w-11 h-11 rounded-2xl bg-purple-50 border border-purple-200 text-purple-600 flex items-center justify-center text-lg mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors font-mono">APLIKASI KASIR_POS</h4>
+              <p class="text-xs text-slate-500 font-medium mt-0.5">Sistem Kasir Ritel Cepat dengan Arsitektur Database Terstruktur</p>
+            </div>
+          </div>
+          <!-- Body -->
+          <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                Solusi aplikasi Point-of-Sale lengkap untuk operasional ritel. Menyediakan kalkulasi belanja kilat, manajemen barcode produk, pencatatan riwayat transaksi kasir, dan ringkasan laba.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 border border-purple-100">PHP</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">MySQL</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-100">Tailwind CSS</span>
+                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">POS Engine</span>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <a href="https://github.com/NaufalMartinoAdistama/kasir_pos" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-2 bg-slate-900 hover:bg-blue-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-slate-900/20 active:scale-95 transition-all">
+                <i class="fa-brands fa-github text-sm"></i>
+                <span>Buka di GitHub ↗</span>
+              </a>
+              <button onclick="openProjectModal('kasir_pos')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Detail Info</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- 6. PENDIDIKAN & PENGALAMAN (Modern Vertical Timeline)    -->
+  <!-- ======================================================== -->
+  <section id="pendidikan" class="py-20 sm:py-28 bg-slate-50/60 border-t border-slate-200/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal-3d">
+        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 mb-3">
+          TRACK RECORD
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Pendidikan &amp; Pengalaman Industri
+        </h2>
+        <p class="mt-4 text-base sm:text-lg text-slate-600">
+          Perjalanan pendidikan formal kejuruan, sertifikasi kompetensi industri, serta pengalaman magang profesional.
+        </p>
+      </div>
+
+      <!-- Modern Vertical Timeline Container -->
+      <div class="max-w-4xl mx-auto relative">
+        
+        <!-- Vertical Central Connecting Line -->
+        <div class="absolute left-4 sm:left-1/2 top-4 bottom-4 w-0.5 bg-blue-200 transform sm:-translate-x-1/2"></div>
+
+        <div class="space-y-12">
+          
+          <!-- Timeline Item 1: SMK PGRI 2 Ponorogo -->
+          <div class="reveal-3d relative flex flex-col sm:flex-row items-start group">
+            <!-- Node Marker -->
+            <div class="absolute left-4 sm:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-blue-600 shadow-md flex items-center justify-center transform -translate-x-1/2 z-10">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            </div>
+
+            <!-- Content Card (Left on Desktop) -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2 sm:pr-10 w-full">
+              <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm card-hover-effect">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">
+                    2023 — Sekarang
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Pendidikan Formal</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">SMK PGRI 2 Ponorogo</h3>
+                <p class="text-sm font-semibold text-blue-600 mb-3">Jurusan Rekayasa Perangkat Lunak (RPL)</p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  Fokus intensif pada pengembangan web Full-Stack, manajemen server, pemodelan database relasional, algoritma komputasi, dan rekayasa perangkat lunak berorientasi objek (OOP).
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Web Dev</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Database Engineering</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">OOP</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hidden sm:block sm:w-1/2"></div>
+          </div>
+
+          <!-- Timeline Item 2: PT. AGIT -->
+          <div class="reveal-3d relative flex flex-col sm:flex-row items-start group">
+            <!-- Node Marker -->
+            <div class="absolute left-4 sm:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-blue-600 shadow-md flex items-center justify-center transform -translate-x-1/2 z-10">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            </div>
+
+            <div class="hidden sm:block sm:w-1/2"></div>
+
+            <!-- Content Card (Right on Desktop) -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2 sm:pl-10 w-full">
+              <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm card-hover-effect">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                    Program Industri
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Technical Trainee</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">PT. Astragraphia Information Technology (AGIT)</h3>
+                <p class="text-sm font-semibold text-blue-600 mb-3">Peserta Pelatihan Competence Aid Program (CAP)</p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  Terpilih mengikuti program pelatihan teknis terakreditasi dari korporasi teknologi terkemuka PT. AGIT, mengasah keterampilan enterprise IT, kolaborasi tim, dan kesiapan industri digital.
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">CAP Certified</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Enterprise Readiness</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Professional Ethics</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 3: PRAKERIN / PKL PT Artavel Surabaya -->
+          <div class="reveal-3d relative flex flex-col sm:flex-row items-start group">
+            <!-- Node Marker -->
+            <div class="absolute left-4 sm:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-blue-600 shadow-md flex items-center justify-center transform -translate-x-1/2 z-10">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            </div>
+
+            <!-- Content Card (Left on Desktop) -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2 sm:pr-10 w-full">
+              <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm card-hover-effect">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">
+                    Pengalaman Kerja Industri
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Surabaya</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Praktik Kerja Industri (PRAKERIN / PKL)</h3>
+                <p class="text-sm font-semibold text-blue-600 mb-3">PT Artavel Inovasi Teknologi (Artavel Surabaya)</p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  Menjalani praktik kerja industri nyata di <strong>PT Artavel Surabaya</strong>. Berperan aktif dalam pengembangan dan pemeliharaan fitur website, pengujian fungsionalitas aplikasi, implementasi antarmuka pengguna yang responsif, serta berkolaborasi langsung bersama tim developer profesional.
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">PT Artavel Surabaya</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Industrial Internship</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Web Engineering</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Team Collaboration</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hidden sm:block sm:w-1/2"></div>
+          </div>
+
+          <!-- Timeline Item 4: MTsN 1 Ponorogo (Tingkat SMP) -->
+          <div class="reveal-3d relative flex flex-col sm:flex-row items-start group">
+            <!-- Node Marker -->
+            <div class="absolute left-4 sm:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-blue-600 shadow-md flex items-center justify-center transform -translate-x-1/2 z-10">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            </div>
+
+            <div class="hidden sm:block sm:w-1/2"></div>
+
+            <!-- Content Card (Right on Desktop) -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2 sm:pl-10 w-full">
+              <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm card-hover-effect">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">
+                    Pendidikan Menengah
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Ponorogo</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">MTsN 1 Ponorogo</h3>
+                <p class="text-sm font-semibold text-blue-600 mb-3">Tingkat Menengah Pertama (SMP / MTs)</p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  Menempuh pendidikan tingkat menengah pertama dengan fokus penguatan akademik sains, logika komputasi dasar, serta pembentukan karakter disiplin yang menjadi landasan kuat untuk melanjutkan ke jurusan Rekayasa Perangkat Lunak.
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">MTsN 1 Ponorogo</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Logika &amp; Sains</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Fondasi IT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 5: MI Ma'arif Sabilul Muttaqin (Tingkat SD) -->
+          <div class="reveal-3d relative flex flex-col sm:flex-row items-start group">
+            <!-- Node Marker -->
+            <div class="absolute left-4 sm:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-blue-600 shadow-md flex items-center justify-center transform -translate-x-1/2 z-10">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            </div>
+
+            <!-- Content Card (Left on Desktop) -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2 sm:pr-10 w-full">
+              <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm card-hover-effect">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                    Pendidikan Dasar
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Ponorogo</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">MI Ma'arif Sabilul Muttaqin</h3>
+                <p class="text-sm font-semibold text-blue-600 mb-3">Tingkat Pendidikan Dasar (SD / MI)</p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  Menyelesaikan pendidikan dasar dengan pembekalan nilai-nilai budi pekerti, integritas, pengasahan logika matematika dasar, dan kebiasaan belajar aktif yang melatih rasa ingin tahu terhadap ilmu pengetahuan.
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">MI Sabilul Muttaqin</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Pendidikan Karakter</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Dasar Numerik</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hidden sm:block sm:w-1/2"></div>
+          </div>
+
+          <!-- Timeline Item 6: TK Aisyiyah Bungkal -->
+          <div class="reveal-3d relative flex flex-col sm:flex-row items-start group">
+            <!-- Node Marker -->
+            <div class="absolute left-4 sm:left-1/2 w-8 h-8 rounded-full bg-white border-4 border-blue-600 shadow-md flex items-center justify-center transform -translate-x-1/2 z-10">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            </div>
+
+            <div class="hidden sm:block sm:w-1/2"></div>
+
+            <!-- Content Card (Right on Desktop) -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2 sm:pl-10 w-full">
+              <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm card-hover-effect">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100">
+                    Pendidikan Usia Dini
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Bungkal, Ponorogo</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">TK Aisyiyah Bungkal</h3>
+                <p class="text-sm font-semibold text-blue-600 mb-3">Taman Kanak-Kanak / PAUD</p>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                  Awal mula perjalanan pendidikan yang menumbuhkan kreativitas, interaksi sosial, pembentukan kepribadian santun, dan semangat belajar bersama di lingkungan Bungkal, Ponorogo.
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">TK Aisyiyah Bungkal</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Kreativitas Awal</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Fondasi Tumbuh Kembang</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- 7. CONTACT & CTA SECTION (Terhubung ke WhatsApp Langsung) -->
+  <!-- ======================================================== -->
+  <section id="contact" class="py-20 sm:py-28 bg-white border-t border-slate-200/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- CTA Top Banner with 3D Torus Knot Canvas -->
+      <div id="contact-banner-container" class="relative rounded-3xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 p-8 sm:p-12 mb-16 text-white overflow-hidden shadow-xl shadow-blue-500/20 reveal-3d">
+        
+        <!-- 3D Torus Knot Canvas Container (Enhanced 3D Floating Mesh) -->
+        <div id="contact-torus-canvas-container" class="absolute right-0 top-0 bottom-0 w-full sm:w-1/2 pointer-events-none overflow-hidden opacity-45 sm:opacity-75 z-0"></div>
+
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-sm mb-4">
+            MARI BERKOLABORASI 👋
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-4">
+            Let's build something Amazing together!
+          </h2>
+          <p class="text-blue-100 text-sm sm:text-base leading-relaxed max-w-2xl">
+            Apakah Anda memiliki proyek website baru, peluang magang industri, atau ingin mendiskusikan implementasi backend Laravel dan AI? Saya siap mendengarkan dan berkontribusi secara maksimal.
+          </p>
+        </div>
+      </div>
+
+      <!-- Grid Formulir & Kontak Info -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Kolom Form Kontak Interaktif (Auto WhatsApp Message Generator) -->
+        <div class="reveal-3d lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 sm:p-9 shadow-sm card-hover-effect">
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-brands fa-whatsapp text-emerald-500 text-2xl"></i>
+              <span>Kirim Pesan Langsung via WhatsApp</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              Isi data di bawah ini, lalu klik tombol untuk membuka obrolan WhatsApp dengan pesan yang sudah terformat rapi.
+            </p>
+          </div>
+
+          <form id="contact-form" class="space-y-4" onsubmit="event.preventDefault(); handleSendWhatsApp();">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Input Nama -->
+              <div>
+                <label for="wa-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Nama Anda <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                    <i class="fa-regular fa-user text-sm"></i>
+                  </span>
+                  <input type="text" id="wa-name" required placeholder="Contoh: Budi Santoso"
+                         class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all">
+                </div>
+              </div>
+
+              <!-- Input Email / Kontak Pengirim -->
+              <div>
+                <label for="wa-contact" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Email / No. WhatsApp
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                    <i class="fa-regular fa-envelope text-sm"></i>
+                  </span>
+                  <input type="text" id="wa-contact" placeholder="budi@example.com / 0812..."
+                         class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all">
+                </div>
+              </div>
+            </div>
+
+            <!-- Input Keperluan / Subjek -->
+            <div>
+              <label for="wa-subject" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Keperluan / Subjek
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                  <i class="fa-solid fa-tag text-sm"></i>
+                </span>
+                <select id="wa-subject"
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-sm text-slate-800 bg-white outline-none transition-all">
+                  <option value="Tawaran Proyek Website">Tawaran Proyek Website Baru</option>
+                  <option value="Peluang Magang / Kerja">Peluang Magang / Internship / Kerja</option>
+                  <option value="Konsultasi Teknis &amp; Kolaborasi">Konsultasi Teknis &amp; Kolaborasi</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Input Pesan -->
+            <div>
+              <label for="wa-message" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Isi Pesan <span class="text-red-500">*</span>
+              </label>
+              <textarea id="wa-message" rows="4" required placeholder="Tuliskan detail ide atau pertanyaan Anda di sini..."
+                        class="w-full p-4 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-sm text-slate-800 placeholder-slate-400 outline-none transition-all"></textarea>
+            </div>
+
+            <!-- Tombol Kirim -->
+            <div class="pt-2">
+              <button type="submit" 
+                      class="w-full inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg hover:shadow-emerald-600/20 active:scale-[0.99] transition-all duration-200">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Kirim ke WhatsApp Saya 🚀</span>
+              </button>
+            </div>
+
+            <p class="text-center text-[11px] text-slate-400">
+              *Setelah mengklik tombol, Anda akan dialihkan ke aplikasi WhatsApp Web/Mobile resmi dengan format pesan siap kirim.
+            </p>
+
+          </form>
+        </div>
+
+        <!-- Kolom Info Kontak Cepat -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Card Info Kontak -->
+          <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm card-hover-effect">
+            <h4 class="text-base font-bold text-slate-900 mb-6 pb-3 border-b border-slate-100">
+              Saluran Kontak Resmi
+            </h4>
+
+            <div class="space-y-5">
+              
+              <!-- WA Quick Contact -->
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0 border border-emerald-100">
+                  <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs text-slate-400 font-medium">WhatsApp</p>
+                  <a href="https://wa.me/6282336802600" target="_blank" class="text-sm font-bold text-slate-800 hover:text-emerald-600 transition-colors block">
+                    082 336 802 600
+                  </a>
+                  <p class="text-[11px] text-emerald-600 font-semibold mt-0.5">🟢 Aktif &amp; Cepat Tanggap</p>
+                </div>
+              </div>
+
+              <!-- Email Quick Contact -->
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shrink-0 border border-blue-100">
+                  <i class="fa-regular fa-envelope"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs text-slate-400 font-medium">Email Utama</p>
+                  <a href="mailto:naufalnazeera22@gmail.com" class="text-sm font-bold text-slate-800 hover:text-blue-600 transition-colors block">
+                    naufalnazeera22@gmail.com
+                  </a>
+                  <button onclick="copyToClipboard('naufalnazeera22@gmail.com', 'Email berhasil disalin!')" 
+                          class="text-[11px] font-semibold text-blue-600 hover:underline inline-flex items-center gap-1 mt-0.5">
+                    <i class="fa-regular fa-copy"></i> Salin Email
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lokasi -->
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg shrink-0 border border-rose-100">
+                  <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs text-slate-400 font-medium">Domisili</p>
+                  <p class="text-sm font-bold text-slate-800">Ponorogo, Jawa Timur, Indonesia</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Terbuka untuk remote &amp; onsite work</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Kode Status Respon -->
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
+                <p class="text-xs text-slate-600">
+                  Estimasi waktu respons pesan: <strong class="text-slate-800">1 - 3 Jam</strong>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Social Media Grid Link Card -->
+          <div class="reveal-3d bg-white border border-slate-200 rounded-3xl p-6 shadow-sm card-hover-effect">
+            <h4 class="text-xs uppercase tracking-wider font-bold text-slate-400 mb-4">
+              Kunjungi Profil Pengembang:
+            </h4>
+            <div class="grid grid-cols-2 gap-3">
+              <a href="https://github.com/NaufalMartinoAdistama" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors">
+                <i class="fa-brands fa-github text-lg"></i>
+                <span class="text-xs font-semibold">GitHub</span>
+              </a>
+              <a href="https://gitlab.com/naufalnazeera22" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-orange-50 border border-slate-200 text-slate-700 hover:text-orange-600 transition-colors">
+                <i class="fa-brands fa-gitlab text-lg"></i>
+                <span class="text-xs font-semibold">GitLab</span>
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 text-slate-700 hover:text-blue-600 transition-colors">
+                <i class="fa-brands fa-linkedin text-lg"></i>
+                <span class="text-xs font-semibold">LinkedIn</span>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                 class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-pink-50 border border-slate-200 text-slate-700 hover:text-pink-600 transition-colors">
+                <i class="fa-brands fa-instagram text-lg"></i>
+                <span class="text-xs font-semibold">Instagram</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- 8. FOOTER                                                -->
+  <!-- ======================================================== -->
+  <footer class="bg-slate-50/70 border-t border-slate-200 pt-16 pb-12 text-slate-600 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Multi-Column Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-200">
+        
+        <!-- Kolom 1: Brand & Profil Singkat (span 4) -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
+              <i class="fa-solid fa-code text-base"></i>
+            </div>
+            <div>
+              <span class="text-xl font-bold tracking-tight text-slate-900 font-mono">Naufal<span class="text-blue-600">.dev</span></span>
+              <p class="text-xs text-slate-500 font-medium">Junior Web Developer · Ponorogo, ID</p>
+            </div>
+          </div>
+          
+          <p class="text-xs text-slate-600 leading-relaxed pr-2">
+            Siswa Rekayasa Perangkat Lunak (RPL) SMK PGRI 2 Ponorogo yang berfokus pada pengembangan backend Laravel, arsitektur RESTful API, dan web modern dengan komitmen kualitas kode bersih.
+          </p>
+
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Terbuka untuk Magang &amp; Freelance Proyek</span>
+          </div>
+        </div>
+
+        <!-- Kolom 2: Navigasi Cepat (span 2) -->
+        <div class="lg:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">Navigasi</h4>
+          <ul class="space-y-2.5 text-xs font-medium">
+            <li>
+              <a href="#home" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-chevron-right text-[9px] text-blue-500"></i>
+                <span>Home</span>
+              </a>
+            </li>
+            <li>
+              <a href="#about" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-chevron-right text-[9px] text-blue-500"></i>
+                <span>Tentang Saya</span>
+              </a>
+            </li>
+            <li>
+              <a href="#skills" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-chevron-right text-[9px] text-blue-500"></i>
+                <span>Keahlian &amp; Tools</span>
+              </a>
+            </li>
+            <li>
+              <a href="#projects" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-chevron-right text-[9px] text-blue-500"></i>
+                <span>Portofolio Proyek</span>
+              </a>
+            </li>
+            <li>
+              <a href="#pendidikan" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-chevron-right text-[9px] text-blue-500"></i>
+                <span>Pendidikan &amp; PKL</span>
+              </a>
+            </li>
+            <li>
+              <a href="#contact" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-chevron-right text-[9px] text-blue-500"></i>
+                <span>Hubungi Saya</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Kolom 3: Proyek Pilihan (span 3) -->
+        <div class="lg:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">Proyek Pilihan</h4>
+          <ul class="space-y-2.5 text-xs font-medium">
+            <li>
+              <a href="https://gitlab.com/naufalnazeera22/perpustakaan-api" target="_blank" rel="noopener noreferrer" 
+                 class="hover:text-blue-600 transition-colors inline-flex items-center gap-2 group">
+                <i class="fa-brands fa-gitlab text-orange-500 text-xs"></i>
+                <span class="group-hover:underline">PERPUSTAKAAN_API</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-600">REST API</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://gitlab.com/naufalnazeera22/mini-kasir-app" target="_blank" rel="noopener noreferrer" 
+                 class="hover:text-blue-600 transition-colors inline-flex items-center gap-2 group">
+                <i class="fa-brands fa-gitlab text-orange-500 text-xs"></i>
+                <span class="group-hover:underline">MINI KASIR_APP</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-600">POS</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://gitlab.com/naufalnazeera22/apk-toko-roti" target="_blank" rel="noopener noreferrer" 
+                 class="hover:text-blue-600 transition-colors inline-flex items-center gap-2 group">
+                <i class="fa-brands fa-gitlab text-orange-500 text-xs"></i>
+                <span class="group-hover:underline">TOKO ROTI</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://gitlab.com/naufalnazeera22/rentalmobil" target="_blank" rel="noopener noreferrer" 
+                 class="hover:text-blue-600 transition-colors inline-flex items-center gap-2 group">
+                <i class="fa-brands fa-gitlab text-orange-500 text-xs"></i>
+                <span class="group-hover:underline">RENTAL MOBIL</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/NaufalMartinoAdistama/perpustakaan" target="_blank" rel="noopener noreferrer" 
+                 class="hover:text-blue-600 transition-colors inline-flex items-center gap-2 group">
+                <i class="fa-brands fa-github text-slate-700 text-xs"></i>
+                <span class="group-hover:underline">APLIKASI PERPUSTAKAAN</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/NaufalMartinoAdistama/kasir_pos" target="_blank" rel="noopener noreferrer" 
+                 class="hover:text-blue-600 transition-colors inline-flex items-center gap-2 group">
+                <i class="fa-brands fa-github text-slate-700 text-xs"></i>
+                <span class="group-hover:underline">APLIKASI KASIR_POS</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Kolom 4: Kontak Resmi & Jejaring (span 3) -->
+        <div class="lg:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">Kontak Resmi</h4>
+          <div class="space-y-2.5 text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs shrink-0 border border-emerald-200">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <a href="https://wa.me/6282336802600" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-800 hover:text-emerald-600 transition-colors block">
+                  082 336 802 600
+                </a>
+                <span class="text-[10px] text-emerald-600 font-medium">WhatsApp Aktif</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs shrink-0 border border-blue-200">
+                <i class="fa-regular fa-envelope"></i>
+              </div>
+              <div>
+                <a href="mailto:naufalnazeera22@gmail.com" class="font-semibold text-slate-800 hover:text-blue-600 transition-colors block break-all">
+                  naufalnazeera22@gmail.com
+                </a>
+                <span class="text-[10px] text-slate-500 font-medium">Email Utama</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xs shrink-0 border border-rose-200">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800">Ponorogo, Jawa Timur</p>
+                <span class="text-[10px] text-slate-500 font-medium">Indonesia</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Buttons -->
+          <div class="pt-3">
+            <p class="text-[11px] font-semibold text-slate-500 mb-2 font-mono">Jejaring Pengembang:</p>
+            <div class="flex items-center gap-2">
+              <a href="https://github.com/NaufalMartinoAdistama" target="_blank" rel="noopener noreferrer" 
+                 class="w-8 h-8 rounded-xl bg-white hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-700 flex items-center justify-center transition-all duration-200 shadow-2xs hover:scale-105" 
+                 title="GitHub Profile">
+                <i class="fa-brands fa-github text-sm"></i>
+              </a>
+              <a href="https://gitlab.com/naufalnazeera22" target="_blank" rel="noopener noreferrer" 
+                 class="w-8 h-8 rounded-xl bg-white hover:bg-orange-600 hover:text-white border border-slate-200 text-slate-700 flex items-center justify-center transition-all duration-200 shadow-2xs hover:scale-105" 
+                 title="GitLab Profile">
+                <i class="fa-brands fa-gitlab text-sm"></i>
+              </a>
+              <a href="https://wa.me/6282336802600" target="_blank" rel="noopener noreferrer" 
+                 class="w-8 h-8 rounded-xl bg-white hover:bg-emerald-600 hover:text-white border border-slate-200 text-slate-700 flex items-center justify-center transition-all duration-200 shadow-2xs hover:scale-105" 
+                 title="WhatsApp Direct">
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
+                 class="w-8 h-8 rounded-xl bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-slate-700 flex items-center justify-center transition-all duration-200 shadow-2xs hover:scale-105" 
+                 title="LinkedIn Profile">
+                <i class="fa-brands fa-linkedin-in text-sm"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Copyright & Back to Top -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-xs text-slate-500">
+        <p>© 2026 Naufal Martino Adistama. Seluruh hak cipta dilindungi.</p>
+        <p class="flex items-center gap-1.5">
+          <span>Dibuat dengan</span>
+          <i class="fa-solid fa-heart text-red-500 text-[11px]"></i>
+          <span>menggunakan HTML5, Tailwind CSS &amp; Three.js</span>
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ======================================================== -->
+  <!-- MOBILE CURVED FLOATING BOTTOM NAVIGATION BAR (md:hidden) -->
+  <!-- ======================================================== -->
+  <nav id="mobile-curved-nav" class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-t-[26px] px-2 pt-2.5 pb-4 safe-bottom transition-all duration-300">
+    <div class="max-w-md mx-auto grid grid-cols-5 items-end justify-items-center relative">
+      
+      <!-- Tab 1: Home -->
+      <a href="#home" class="mobile-bottom-tab group flex flex-col items-center justify-center w-full py-1 text-slate-400 transition-all duration-300 active" data-target="home">
+        <div class="tab-icon-wrapper w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300">
+          <i class="fa-solid fa-house text-lg"></i>
+        </div>
+        <span class="tab-label text-[10px] font-medium tracking-tight mt-0.5">Home</span>
+      </a>
+
+      <!-- Tab 2: About -->
+      <a href="#about" class="mobile-bottom-tab group flex flex-col items-center justify-center w-full py-1 text-slate-400 transition-all duration-300" data-target="about">
+        <div class="tab-icon-wrapper w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300">
+          <i class="fa-solid fa-user text-lg"></i>
+        </div>
+        <span class="tab-label text-[10px] font-medium tracking-tight mt-0.5">About</span>
+      </a>
+
+      <!-- Tab 3: Skills -->
+      <a href="#skills" class="mobile-bottom-tab group flex flex-col items-center justify-center w-full py-1 text-slate-400 transition-all duration-300" data-target="skills">
+        <div class="tab-icon-wrapper w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300">
+          <i class="fa-solid fa-code text-lg"></i>
+        </div>
+        <span class="tab-label text-[10px] font-medium tracking-tight mt-0.5">Skills</span>
+      </a>
+
+      <!-- Tab 4: Projects -->
+      <a href="#projects" class="mobile-bottom-tab group flex flex-col items-center justify-center w-full py-1 text-slate-400 transition-all duration-300" data-target="projects">
+        <div class="tab-icon-wrapper w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300">
+          <i class="fa-solid fa-folder-open text-lg"></i>
+        </div>
+        <span class="tab-label text-[10px] font-medium tracking-tight mt-0.5">Proyek</span>
+      </a>
+
+      <!-- Tab 5: Contact -->
+      <a href="#contact" class="mobile-bottom-tab group flex flex-col items-center justify-center w-full py-1 text-slate-400 transition-all duration-300" data-target="contact">
+        <div class="tab-icon-wrapper w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300">
+          <i class="fa-solid fa-paper-plane text-lg"></i>
+        </div>
+        <span class="tab-label text-[10px] font-medium tracking-tight mt-0.5">Kontak</span>
+      </a>
+
+    </div>
+  </nav>
+
+
+  <!-- ======================================================== -->
+  <!-- FLOATING ACTION: BACK TO TOP BUTTON                      -->
+  <!-- ======================================================== -->
+  <button id="back-to-top" 
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+          class="fixed bottom-24 md:bottom-6 right-5 z-40 w-11 h-11 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:text-blue-600 hover:border-blue-400 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none translate-y-3"
+          aria-label="Kembali ke atas">
+    <i class="fa-solid fa-arrow-up text-sm"></i>
+  </button>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL DETAIL PROYEK INTERAKTIF                           -->
+  <!-- ======================================================== -->
+  <div id="project-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white rounded-3xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 max-h-[90vh] flex flex-col" id="modal-container">
+      
+      <!-- Modal Header -->
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg" id="modal-icon">
+            <i class="fa-solid fa-cube"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-slate-900" id="modal-title">Nama Proyek</h3>
+            <p class="text-xs text-slate-500" id="modal-subtitle">Sub-judul proyek</p>
+          </div>
+        </div>
+        <button onclick="closeProjectModal()" class="w-9 h-9 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 sm:p-7 overflow-y-auto space-y-5 text-sm text-slate-600 leading-relaxed" id="modal-content">
+        <!-- Content will be injected via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-5 border-t border-slate-100 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
+        <a id="modal-repo-link" href="#" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow-blue-500/20 active:scale-95 transition-all">
+          <i id="modal-repo-icon" class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          <span id="modal-repo-text">Buka Repository di Browser ↗</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <button id="modal-copy-clone" type="button" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 transition-all flex items-center gap-1.5">
+            <i class="fa-regular fa-copy text-xs"></i>
+            <span>Salin Git URL</span>
+          </button>
+          <button onclick="closeProjectModal()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-200 hover:bg-slate-300 text-slate-800 transition-all">
+            Tutup
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TOAST NOTIFICATION                                       -->
+  <!-- ======================================================== -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toast-message">Pesan notifikasi</span>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT: THREE.JS, 3D TILT, SCROLL MORPH & FILTER     -->
+  <!-- ======================================================== -->
+  <script>
+
+    /* ---------------------------------------------------- */
+    /* 0. CINEMATIC SPLASH PRELOADER TIMELINE (10 SECONDS)  */
+    /* ---------------------------------------------------- */
+    let preloaderCompleted = false;
+    let preloaderRafId = null;
+
+    function finishPreloader() {
+      if (preloaderCompleted) return;
+      preloaderCompleted = true;
+
+      if (preloaderRafId) {
+        cancelAnimationFrame(preloaderRafId);
+        preloaderRafId = null;
+      }
+
+      const preloader = document.getElementById('preloader-screen');
+      const progressFill = document.getElementById('preloader-progress-fill');
+      const progressText = document.getElementById('preloader-progress-text');
+      const statusText = document.getElementById('preloader-status-text');
+
+      if (progressFill) progressFill.style.width = '100%';
+      if (progressText) progressText.textContent = '100%';
+      if (statusText) statusText.textContent = 'Portofolio Siap Dibuka!';
+
+      if (preloader) {
+        preloader.classList.add('exit-down');
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 900);
+      }
+
+      // Pulihkan scrolling pada body
+      document.body.classList.remove('overflow-hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function skipPreloaderIntro() {
+      finishPreloader();
+    }
+
+    (function initCinematicPreloader() {
+      const preloader = document.getElementById('preloader-screen');
+      if (!preloader) return;
+
+      // Kunci scroll body selama loading
+      document.body.classList.add('overflow-hidden');
+      document.body.style.overflow = 'hidden';
+
+      const progressFill = document.getElementById('preloader-progress-fill');
+      const progressText = document.getElementById('preloader-progress-text');
+      const statusText = document.getElementById('preloader-status-text');
+      const skipBtn = document.getElementById('preloader-skip-btn');
+      const photoCard = document.getElementById('preloader-photo-card');
+      const textNaufal = document.getElementById('preloader-text-naufal');
+      const textMartino = document.getElementById('preloader-text-martino');
+      const textAdistama = document.getElementById('preloader-text-adistama');
+      const nameRole = document.getElementById('preloader-name-role');
+
+      const TOTAL_DURATION = 10000; // 10 Detik
+      const startTime = performance.now();
+
+      // State triggers agar class hanya diubah sekali per tahap
+      let triggeredSkip = false;
+      let triggeredNaufalEnter = false;
+      let triggeredNaufalExit = false;
+      let triggeredMartinoEnter = false;
+      let triggeredMartinoExit = false;
+      let triggeredAdistama = false;
+      let triggeredNameRole = false;
+
+      // Reveal foto segera di detik ke 0.1
+      setTimeout(() => {
+        if (photoCard && !preloaderCompleted) {
+          photoCard.classList.remove('scale-75', 'opacity-0', 'blur-md');
+          photoCard.classList.add('scale-100', 'opacity-100', 'blur-0');
+        }
+      }, 100);
+
+      function updateTimeline(now) {
+        if (preloaderCompleted) return;
+
+        const elapsed = now - startTime;
+        const progressRatio = Math.min(Math.max(elapsed / TOTAL_DURATION, 0), 1);
+        const percent = Math.floor(progressRatio * 100);
+
+        if (progressFill) progressFill.style.width = percent + '%';
+        if (progressText) progressText.textContent = percent + '%';
+
+        // Tahap 1: Detik 0.0 – 2.0 (Photo First Reveal)
+        if (elapsed < 2000) {
+          if (statusText) statusText.textContent = "Memuat Foto & Identitas Visual...";
+        }
+
+        // Munculkan tombol Lewati Intro setelah detik 2.5
+        if (elapsed >= 2500 && !triggeredSkip) {
+          triggeredSkip = true;
+          if (skipBtn) {
+            skipBtn.classList.remove('opacity-0', 'pointer-events-none');
+            skipBtn.classList.add('opacity-100');
+          }
+        }
+
+        // Tahap 2: Detik 2.0 – 4.5 (NAUFAL: Pojok Kiri Atas -> Tengah -> Bawah)
+        if (elapsed >= 2000 && elapsed < 4500) {
+          if (statusText) statusText.textContent = "Menginisialisasi Profil: Naufal...";
+          if (!triggeredNaufalEnter && textNaufal) {
+            triggeredNaufalEnter = true;
+            textNaufal.className = 'kinetic-text kinetic-naufal-center font-sans font-black tracking-tighter';
+          }
+          if (elapsed >= 3600 && !triggeredNaufalExit && textNaufal) {
+            triggeredNaufalExit = true;
+            textNaufal.className = 'kinetic-text kinetic-naufal-exit font-sans font-black tracking-tighter';
+          }
+        }
+
+        // Tahap 3: Detik 4.5 – 7.0 (MARTINO: Pojok Kanan Atas -> Tengah -> Bawah)
+        if (elapsed >= 4500 && elapsed < 7000) {
+          if (statusText) statusText.textContent = "Memuat Arsitektur & Komponen 3D...";
+          if (!triggeredMartinoEnter && textMartino) {
+            triggeredMartinoEnter = true;
+            textMartino.className = 'kinetic-text kinetic-martino-center font-sans font-black tracking-tighter';
+          }
+          if (elapsed >= 6000 && !triggeredMartinoExit && textMartino) {
+            triggeredMartinoExit = true;
+            textMartino.className = 'kinetic-text kinetic-martino-exit font-sans font-black tracking-tighter';
+          }
+        }
+
+        // Tahap 4: Detik 7.0 – 9.0 (ADISTAMA & Nama Lengkap Sinkronisasi)
+        if (elapsed >= 7000 && elapsed < 9000) {
+          if (statusText) statusText.textContent = "Menyiapkan Portofolio GitLab & GitHub...";
+          if (!triggeredAdistama && textAdistama) {
+            triggeredAdistama = true;
+            textAdistama.className = 'kinetic-text kinetic-adistama-center font-sans font-black tracking-tighter';
+          }
+          if (!triggeredNameRole && nameRole) {
+            triggeredNameRole = true;
+            nameRole.classList.remove('opacity-0', 'translate-y-3');
+            nameRole.classList.add('opacity-100', 'translate-y-0');
+          }
+        }
+
+        // Tahap 5: Detik 9.0 – 10.0 (Portofolio Siap & Selesai Turun ke Bawah)
+        if (elapsed >= 9000 && elapsed < TOTAL_DURATION) {
+          if (statusText) statusText.textContent = "Portofolio Siap Dibuka!";
+        }
+
+        if (elapsed >= TOTAL_DURATION) {
+          finishPreloader();
+          return;
+        }
+
+        preloaderRafId = requestAnimationFrame(updateTimeline);
+      }
+
+      preloaderRafId = requestAnimationFrame(updateTimeline);
+    })();
+
+    
+    // Handler klik tab mobile bottom navigation
+    document.querySelectorAll('.mobile-bottom-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.mobile-bottom-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Inisialisasi ikon Lucide
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    /* ---------------------------------------------------- */
+    /* 1. HERO THREE.JS SCENE + SCROLL-DRIVEN 3D MORPHING   */
+    /* ---------------------------------------------------- */
+    let heroRafId = null;
+    let isHeroVisible = true;
+
+    (function initHeroThreeJS() {
+      const container = document.getElementById('hero-canvas-container');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      
+      const camera = new THREE.PerspectiveCamera(
+        45, 
+        container.clientWidth / container.clientHeight, 
+        0.1, 
+        1000
+      );
+      camera.position.z = 18;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Grup Utama Objek 3D
+      const objectGroup = new THREE.Group();
+      scene.add(objectGroup);
+
+      // 1. Outer Geometric Wireframe (Icosahedron)
+      const icoGeometry = new THREE.IcosahedronGeometry(6.5, 1);
+      const icoMaterial = new THREE.MeshBasicMaterial({
+        color: 0x2563EB, // Blue-600
+        wireframe: true,
+        transparent: true,
+        opacity: 0.24,
+      });
+      const icoMesh = new THREE.Mesh(icoGeometry, icoMaterial);
+      objectGroup.add(icoMesh);
+
+      // 2. Inner Floating Dodecahedron Core
+      const innerGeometry = new THREE.DodecahedronGeometry(3.6, 0);
+      const innerMaterial = new THREE.MeshBasicMaterial({
+        color: 0x3B82F6, // Blue-500
+        wireframe: true,
+        transparent: true,
+        opacity: 0.18,
+      });
+      const innerMesh = new THREE.Mesh(innerGeometry, innerMaterial);
+      objectGroup.add(innerMesh);
+
+      // 3. Orbit Ring 1 (TorusGeometry tipis miring di sekitar IcoMesh)
+      const ringGeometry1 = new THREE.TorusGeometry(8.2, 0.04, 16, 120);
+      const ringMaterial1 = new THREE.MeshBasicMaterial({
+        color: 0x3B82F6,
+        transparent: true,
+        opacity: 0.22,
+        wireframe: true
+      });
+      const ringMesh1 = new THREE.Mesh(ringGeometry1, ringMaterial1);
+      ringMesh1.rotation.x = Math.PI / 3;
+      ringMesh1.rotation.y = Math.PI / 6;
+      objectGroup.add(ringMesh1);
+
+      // 4. Orbit Ring 2 (Counter-tilted thin ring)
+      const ringGeometry2 = new THREE.TorusGeometry(9.2, 0.03, 16, 120);
+      const ringMaterial2 = new THREE.MeshBasicMaterial({
+        color: 0x60A5FA,
+        transparent: true,
+        opacity: 0.16,
+        wireframe: true
+      });
+      const ringMesh2 = new THREE.Mesh(ringGeometry2, ringMaterial2);
+      ringMesh2.rotation.x = -Math.PI / 4;
+      ringMesh2.rotation.z = Math.PI / 5;
+      objectGroup.add(ringMesh2);
+
+      // 5. Floating 3D Particle Constellation (Light Blue & Slate Points)
+      const particleCount = 320;
+      const particleGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * 26;
+        positions[i + 1] = (Math.random() - 0.5) * 20;
+        positions[i + 2] = (Math.random() - 0.5) * 18;
+      }
+
+      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      const particleMaterial = new THREE.PointsMaterial({
+        color: 0x3B82F6,
+        size: 0.13,
+        transparent: true,
+        opacity: 0.55,
+      });
+
+      const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+      objectGroup.add(particleSystem);
+
+      // Posisi di sisi kanan pada desktop
+      function adjustGroupPosition() {
+        if (window.innerWidth >= 1024) {
+          objectGroup.position.x = 4.0;
+          objectGroup.position.y = 0;
+        } else {
+          objectGroup.position.x = 0;
+          objectGroup.position.y = 0;
+        }
+      }
+      adjustGroupPosition();
+
+      // Mouse Parallax & Scroll Morph Variables
+      let mouseX = 0, mouseY = 0;
+      let targetX = 0, targetY = 0;
+      let scrollY = 0, targetCameraZ = 18;
+
+      window.addEventListener('mousemove', (e) => {
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+        mouseX = (e.clientX - windowHalfX) * 0.0006;
+        mouseY = (e.clientY - windowHalfY) * 0.0006;
+      });
+
+      window.addEventListener('scroll', () => {
+        scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      }, { passive: true });
+
+      // Performance Optimization: IntersectionObserver to pause when off-screen
+      const heroSection = document.getElementById('home');
+      if (heroSection && 'IntersectionObserver' in window) {
+        const heroObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            isHeroVisible = entry.isIntersecting;
+            if (isHeroVisible && !heroRafId) {
+              animateHero();
+            }
+          });
+        }, { threshold: 0.05 });
+        heroObserver.observe(heroSection);
+      }
+
+      // Animation Loop with Scroll-Driven Morphing
+      let clock = new THREE.Clock();
+
+      function animateHero() {
+        if (!isHeroVisible) {
+          heroRafId = null;
+          return;
+        }
+        heroRafId = requestAnimationFrame(animateHero);
+
+        const delta = clock.getDelta();
+        const elapsedTime = clock.getElapsedTime();
+
+        // Scroll progress ratio (0 to 1 over first viewport height)
+        const scrollRatio = Math.min(Math.max(scrollY / (window.innerHeight || 800), 0), 1.5);
+
+        // Scroll speed boost factor
+        const speedBoost = 1 + scrollRatio * 2.2;
+
+        // Rotasi geometris
+        icoMesh.rotation.y += 0.0025 * speedBoost;
+        icoMesh.rotation.x += 0.0016 * speedBoost;
+
+        innerMesh.rotation.y -= 0.004 * speedBoost;
+        innerMesh.rotation.z += 0.0025 * speedBoost;
+
+        ringMesh1.rotation.z += 0.003 * speedBoost;
+        ringMesh2.rotation.y -= 0.0025 * speedBoost;
+
+        particleSystem.rotation.y += 0.0009 * speedBoost;
+
+        // Smooth Mouse Parallax Lerping
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+
+        objectGroup.rotation.y = targetX * 1.5;
+        objectGroup.rotation.x = targetY * 1.5;
+
+        // Scroll-Driven Scale Expansion (Morphing lembut saat discroll)
+        const targetMorphScale = 1 + scrollRatio * 0.35 + Math.sin(elapsedTime * 1.2) * 0.025;
+        icoMesh.scale.set(targetMorphScale, targetMorphScale, targetMorphScale);
+        
+        const innerScale = 1 + scrollRatio * 0.2 + Math.sin(elapsedTime * 1.5) * 0.04;
+        innerMesh.scale.set(innerScale, innerScale, innerScale);
+
+        // Cinematic Camera Dolly Forward saat scroll
+        targetCameraZ = 18 - Math.min(scrollRatio * 4.5, 6.5);
+        camera.position.z += (targetCameraZ - camera.position.z) * 0.08;
+
+        renderer.render(scene, camera);
+      }
+      animateHero();
+
+      // Responsive Resize
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        adjustGroupPosition();
+      });
+    })();
+
+
+    /* ---------------------------------------------------- */
+    /* 2. 3D PERSPECTIVE TILT & DYNAMIC GLARE ON CARDS      */
+    /* ---------------------------------------------------- */
+    (function init3DTilt() {
+      // Pilih semua elemen kartu target tilt
+      const tiltTargets = document.querySelectorAll('#hero-photo-card, .card-hover-effect, .project-card');
+
+      tiltTargets.forEach(card => {
+        // Buat dynamic glare overlay jika belum ada
+        let glare = card.querySelector('.card-glare');
+        if (!glare) {
+          glare = document.createElement('div');
+          glare.className = 'card-glare';
+          card.appendChild(glare);
+        }
+
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = 'transform 0.1s ease-out, box-shadow 0.25s ease';
+        });
+
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const cardWidth = rect.width;
+          const cardHeight = rect.height;
+
+          // Hitung posisi kursor relatif ke pusat kartu (-1 s/d +1)
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
+
+          const centerX = mouseX - cardWidth / 2;
+          const centerY = mouseY - cardHeight / 2;
+
+          // Derajat rotasi perspektif 3D (maks 9 deg)
+          const rotateX = -(centerY / (cardHeight / 2)) * 8.5;
+          const rotateY = (centerX / (cardWidth / 2)) * 8.5;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+
+          // Posisikan glare radial mengikuti kursor
+          glare.style.opacity = '1';
+          glare.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.3) 0%, rgba(37, 99, 235, 0.1) 35%, transparent 65%)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease';
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+          glare.style.opacity = '0';
+        });
+      });
+    })();
+
+
+    /* ---------------------------------------------------- */
+    /* 3. 3D INTERACTIVE AI OCTAHEDRON CANVAS (IN SKILLS)   */
+    /* ---------------------------------------------------- */
+    let skillsAiRafId = null;
+    let isSkillsAiVisible = false;
+
+    (function initSkillsAiThreeJS() {
+      const container = document.getElementById('skills-ai-canvas-container');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        45, 
+        container.clientWidth / container.clientHeight, 
+        0.1, 
+        100
+      );
+      camera.position.z = 8;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      // Core: Floating Wireframe Octahedron
+      const octGeo = new THREE.OctahedronGeometry(2.4, 0);
+      const octMat = new THREE.MeshBasicMaterial({
+        color: 0x4F46E5, // Indigo-600
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35,
+      });
+      const octMesh = new THREE.Mesh(octGeo, octMat);
+      group.add(octMesh);
+
+      // Inner Core: Inverted Octahedron
+      const innerOctGeo = new THREE.OctahedronGeometry(1.4, 0);
+      const innerOctMat = new THREE.MeshBasicMaterial({
+        color: 0x2563EB, // Blue-600
+        wireframe: true,
+        transparent: true,
+        opacity: 0.5,
+      });
+      const innerOctMesh = new THREE.Mesh(innerOctGeo, innerOctMat);
+      group.add(innerOctMesh);
+
+      // Satellite Nodes & Connectors (Cluster Node AI)
+      const nodesCount = 6;
+      const nodeGeo = new THREE.SphereGeometry(0.12, 8, 8);
+      const nodeMat = new THREE.MeshBasicMaterial({ color: 0x3B82F6 });
+      const satelliteGroup = new THREE.Group();
+
+      for (let i = 0; i < nodesCount; i++) {
+        const node = new THREE.Mesh(nodeGeo, nodeMat);
+        const angle = (i / nodesCount) * Math.PI * 2;
+        const radius = 3.2;
+        node.position.set(Math.cos(angle) * radius, Math.sin(angle) * 1.5, Math.sin(angle) * radius * 0.7);
+        satelliteGroup.add(node);
+      }
+      group.add(satelliteGroup);
+
+      // Observer to pause when not visible
+      const skillsSection = document.getElementById('skills');
+      if (skillsSection && 'IntersectionObserver' in window) {
+        const skillsObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            isSkillsAiVisible = entry.isIntersecting;
+            if (isSkillsAiVisible && !skillsAiRafId) {
+              animateSkillsAi();
+            }
+          });
+        }, { threshold: 0.1 });
+        skillsObserver.observe(skillsSection);
+      }
+
+      let clock = new THREE.Clock();
+
+      function animateSkillsAi() {
+        if (!isSkillsAiVisible) {
+          skillsAiRafId = null;
+          return;
+        }
+        skillsAiRafId = requestAnimationFrame(animateSkillsAi);
+
+        const delta = clock.getDelta();
+        const elapsed = clock.getElapsedTime();
+
+        octMesh.rotation.y += 0.008;
+        octMesh.rotation.x += 0.005;
+
+        innerOctMesh.rotation.y -= 0.012;
+        innerOctMesh.rotation.z += 0.008;
+
+        satelliteGroup.rotation.y += 0.006;
+        satelliteGroup.rotation.x = Math.sin(elapsed * 0.8) * 0.2;
+
+        const pulse = 1 + Math.sin(elapsed * 2) * 0.05;
+        innerOctMesh.scale.set(pulse, pulse, pulse);
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+    })();
+
+
+    /* ---------------------------------------------------- */
+    /* 4. 3D FLOATING TORUS KNOT ON CONTACT CTA BANNER      */
+    /* ---------------------------------------------------- */
+    let contactTorusRafId = null;
+    let isContactVisible = false;
+
+    (function initContactTorusThreeJS() {
+      const container = document.getElementById('contact-torus-canvas-container');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        45, 
+        container.clientWidth / container.clientHeight, 
+        0.1, 
+        100
+      );
+      camera.position.z = 10;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Torus Knot Geometry Wireframe
+      const knotGeo = new THREE.TorusKnotGeometry(2.4, 0.55, 96, 16);
+      const knotMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.16,
+      });
+      const knotMesh = new THREE.Mesh(knotGeo, knotMat);
+      knotMesh.position.x = 1.2;
+      scene.add(knotMesh);
+
+      let mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        const halfX = window.innerWidth / 2;
+        const halfY = window.innerHeight / 2;
+        mouseX = (e.clientX - halfX) * 0.0008;
+        mouseY = (e.clientY - halfY) * 0.0008;
+      });
+
+      // Observer to pause when not visible
+      const contactSection = document.getElementById('contact');
+      if (contactSection && 'IntersectionObserver' in window) {
+        const contactObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            isContactVisible = entry.isIntersecting;
+            if (isContactVisible && !contactTorusRafId) {
+              animateContactTorus();
+            }
+          });
+        }, { threshold: 0.05 });
+        contactObserver.observe(contactSection);
+      }
+
+      let clock = new THREE.Clock();
+
+      function animateContactTorus() {
+        if (!isContactVisible) {
+          contactTorusRafId = null;
+          return;
+        }
+        contactTorusRafId = requestAnimationFrame(animateContactTorus);
+
+        const delta = clock.getDelta();
+        const elapsed = clock.getElapsedTime();
+
+        // Rotasi lembut berkesinambungan
+        knotMesh.rotation.x += 0.005;
+        knotMesh.rotation.y += 0.007;
+
+        // Respons terhadap pergerakan kursor mouse (parallax)
+        knotMesh.rotation.z += (mouseX * 2 - knotMesh.rotation.z) * 0.04;
+        knotMesh.position.x = 1.2 + mouseX * 3;
+
+        // Subtle floating movement melayang vertikal
+        knotMesh.position.y = Math.sin(elapsed * 1.2) * 0.35 - mouseY * 2;
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+    })();
+
+
+    /* ---------------------------------------------------- */
+    /* 5. 3D SCROLL REVEAL & SKILL PROGRESS BARS OBSERVER   */
+    /* ---------------------------------------------------- */
+    (function init3DScrollReveal() {
+      const revealElements = document.querySelectorAll('.reveal-3d');
+
+      if ('IntersectionObserver' in window) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.15,
+          rootMargin: '0px 0px -40px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Observer khusus untuk Skill Progress Bars
+        const skillsSection = document.getElementById('skills');
+        const progressBars = document.querySelectorAll('.skill-progress-bar');
+
+        if (skillsSection && progressBars.length) {
+          const progressObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                progressBars.forEach(bar => {
+                  const targetWidth = bar.getAttribute('data-width') || '85%';
+                  bar.style.width = targetWidth;
+                });
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.2 });
+
+          progressObserver.observe(skillsSection);
+        }
+      } else {
+        // Fallback for older browsers
+        revealElements.forEach(el => el.classList.add('active'));
+        document.querySelectorAll('.skill-progress-bar').forEach(bar => {
+          bar.style.width = bar.getAttribute('data-width') || '85%';
+        });
+      }
+    })();
+
+
+    /* ---------------------------------------------------- */
+    /* 6. DYNAMIC TYPING EFFECT FOR HERO ROLES              */
+    /* ---------------------------------------------------- */
+    const roles = [
+      "Junior Web Developer",
+      "Full-Stack Web Enthusiast",
+      "Laravel & Backend Specialist",
+      "Database & MySQL Enthusiast",
+      "AI-Assisted Developer"
+    ];
+
+    let currentRoleIdx = 0;
+    let charIdx = 0;
+    let isDeleting = false;
+    const typingElement = document.getElementById('typing-role');
+
+    function typeRole() {
+      if (!typingElement) return;
+
+      const currentRole = roles[currentRoleIdx];
+
+      if (isDeleting) {
+        typingElement.textContent = currentRole.substring(0, charIdx - 1);
+        charIdx--;
+      } else {
+        typingElement.textContent = currentRole.substring(0, charIdx + 1);
+        charIdx++;
+      }
+
+      let speed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIdx === currentRole.length) {
+        speed = 2200;
+        isDeleting = true;
+      } else if (isDeleting && charIdx === 0) {
+        isDeleting = false;
+        currentRoleIdx = (currentRoleIdx + 1) % roles.length;
+        speed = 500;
+      }
+
+      setTimeout(typeRole, speed);
+    }
+    setTimeout(typeRole, 600);
+
+
+    /* ---------------------------------------------------- */
+    /* 7. MOBILE MENU TOGGLE & SMOOTH SCROLL CLOSE          */
+    /* ---------------------------------------------------- */
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        if (isHidden) {
+          mobileMenu.classList.remove('hidden');
+          menuIcon.classList.remove('fa-bars');
+          menuIcon.classList.add('fa-xmark');
+        } else {
+          mobileMenu.classList.add('hidden');
+          menuIcon.classList.remove('fa-xmark');
+          menuIcon.classList.add('fa-bars');
+        }
+      });
+
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          menuIcon.classList.remove('fa-xmark');
+          menuIcon.classList.add('fa-bars');
+        });
+      });
+    }
+
+
+    /* ---------------------------------------------------- */
+    /* 8. ACTIVE NAVBAR SCROLLSPY & BACK TO TOP VISIBILITY  */
+    /* ---------------------------------------------------- */
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const backToTopBtn = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 140;
+        const sectionHeight = section.clientHeight;
+        if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+
+      // Sinkronisasi status aktif pada Mobile Curved Bottom Nav
+      const mobileTabs = document.querySelectorAll('.mobile-bottom-tab');
+      mobileTabs.forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.getAttribute('data-target') === current) {
+          tab.classList.add('active');
+        }
+      });
+
+      if (window.pageYOffset > 450) {
+        backToTopBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
+      } else {
+        backToTopBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
+      }
+    }, { passive: true });
+
+
+    /* ---------------------------------------------------- */
+    /* 9. REAL-TIME SEARCH & FILTER WITH 3D FLIP ANIMATION  */
+    /* ---------------------------------------------------- */
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    const searchInput = document.getElementById('project-search-input');
+    const noProjectsNotif = document.getElementById('no-projects-found');
+
+    let currentFilterTag = 'all';
+
+    function applyProjectFilter() {
+      const searchQuery = (searchInput ? searchInput.value : '').toLowerCase().trim();
+      let visibleCount = 0;
+
+      projectCards.forEach(card => {
+        const rawCategories = (card.getAttribute('data-category') || '').toLowerCase();
+        const categoryList = rawCategories.split(/\s+/);
+        const cardText = card.textContent.toLowerCase();
+
+        // Cek kecocokan tag tombol
+        const matchesTag = (currentFilterTag === 'all') || categoryList.includes(currentFilterTag.toLowerCase());
+
+        // Cek kecocokan teks pencarian
+        const matchesSearch = !searchQuery || 
+                              cardText.includes(searchQuery) || 
+                              rawCategories.includes(searchQuery);
+
+        if (matchesTag && matchesSearch) {
+          card.classList.remove('hidden');
+          // Trigger 3D Pop/Flip-in animation
+          card.classList.remove('animate-project-pop');
+          void card.offsetWidth; // Trigger reflow
+          card.classList.add('animate-project-pop');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (noProjectsNotif) {
+        if (visibleCount === 0) {
+          noProjectsNotif.classList.remove('hidden');
+        } else {
+          noProjectsNotif.classList.add('hidden');
+        }
+      }
+    }
+
+    // Klik tombol filter
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetBtn = e.currentTarget;
+        const filterVal = targetBtn.getAttribute('data-filter') || 'all';
+
+        filterButtons.forEach(b => {
+          b.classList.remove('active', 'bg-blue-600', 'text-white');
+          b.classList.add('bg-slate-100', 'text-slate-700');
+        });
+
+        targetBtn.classList.add('active', 'bg-blue-600', 'text-white');
+        targetBtn.classList.remove('bg-slate-100', 'text-slate-700');
+
+        currentFilterTag = filterVal;
+        applyProjectFilter();
+      });
+    });
+
+    // Real-Time Live Search Input
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        applyProjectFilter();
+      });
+    }
+
+    function resetProjectFilters() {
+      if (searchInput) searchInput.value = '';
+      const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+      if (allBtn) allBtn.click();
+    }
+
+
+    /* ---------------------------------------------------- */
+    /* 10. REAL-TIME LIVE CLOCK & COUNTER ANIMATION         */
+    /* ---------------------------------------------------- */
+    function updateRealTimeClock() {
+      const clockEl = document.getElementById('realtime-clock');
+      const dateEl = document.getElementById('realtime-date');
+      const statusEl = document.getElementById('realtime-status-pill');
+      if (!clockEl) return;
+
+      const now = new Date();
+
+      try {
+        const timeStr = new Intl.DateTimeFormat('id-ID', {
+          timeZone: 'Asia/Jakarta',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        }).format(now);
+
+        const dateStr = new Intl.DateTimeFormat('id-ID', {
+          timeZone: 'Asia/Jakarta',
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        }).format(now);
+
+        clockEl.textContent = timeStr.replace(/\./g, ':');
+        if (dateEl) dateEl.textContent = `${dateStr} · Ponorogo`;
+
+        const hour = parseInt(new Intl.DateTimeFormat('en-US', { 
+          timeZone: 'Asia/Jakarta', 
+          hour: 'numeric', 
+          hour12: false 
+        }).format(now), 10);
+
+        if (statusEl) {
+          if (hour >= 7 && hour < 22) {
+            statusEl.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online / Ready';
+          } else {
+            statusEl.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-indigo-300"></span> Deep Focus / Standby';
+          }
+        }
+      } catch (err) {
+        clockEl.textContent = now.toTimeString().split(' ')[0];
+      }
+    }
+
+    setInterval(updateRealTimeClock, 1000);
+    updateRealTimeClock();
+
+    let statsCounterStarted = false;
+    function runStatCounters() {
+      if (statsCounterStarted) return;
+      const counters = document.querySelectorAll('.stat-counter');
+      if (!counters.length) return;
+
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        let current = 0;
+        const duration = 1600;
+        const stepTime = 25;
+        const totalSteps = duration / stepTime;
+        const increment = target / totalSteps;
+
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+          } else {
+            counter.textContent = Math.floor(current);
+          }
+        }, stepTime);
+      });
+
+      statsCounterStarted = true;
+    }
+
+    const statsCardEl = document.getElementById('stats-realtime-card');
+    if (statsCardEl && 'IntersectionObserver' in window) {
+      const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            runStatCounters();
+          }
+        });
+      }, { threshold: 0.25 });
+      statsObserver.observe(statsCardEl);
+    } else {
+      runStatCounters();
+    }
+
+
+    /* ---------------------------------------------------- */
+    /* 11. WHATSAPP FORM MESSAGE GENERATOR                  */
+    /* ---------------------------------------------------- */
+    function handleSendWhatsApp() {
+      const name = document.getElementById('wa-name').value.trim();
+      const contact = document.getElementById('wa-contact').value.trim();
+      const subject = document.getElementById('wa-subject').value;
+      const message = document.getElementById('wa-message').value.trim();
+
+      if (!name || !message) {
+        showToast("Mohon lengkapi Nama dan Pesan Anda!");
+        return;
+      }
+
+      const targetPhone = "6282336802600"; 
+
+      const formattedText = 
+`Halo Naufal Martino Adistama, saya menghubungi melalui form portofolio website Anda:
+
+👤 *Nama:* ${name}
+📱 *Email/No WA:* ${contact || '-'}
+📌 *Keperluan:* ${subject}
+
+💬 *Pesan:*
+"${message}"
+
+Terima kasih!`;
+
+      const encodedUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(formattedText)}`;
+      window.open(encodedUrl, '_blank');
+    }
+
+
+    /* ---------------------------------------------------- */
+    /* 12. TOAST NOTIFICATION & CLIPBOARD COPY              */
+    /* ---------------------------------------------------- */
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      if (!toast || !toastMsg) return;
+
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    function copyToClipboard(text, successMsg) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successMsg || "Berhasil disalin!");
+      }).catch(() => {
+        showToast("Gagal menyalin text.");
+      });
+    }
+
+
+    /* ---------------------------------------------------- */
+    /* 13. MODAL DETAIL PROYEK (8 PROYEK GITLAB & GITHUB)   */
+    /* ---------------------------------------------------- */
+    const projectDetails = {
+      perpustakaan_api: {
+        title: "PERPUSTAKAAN_API",
+        subtitle: "RESTful API Layanan Perpustakaan Digital",
+        icon: "fa-server",
+        platform: "gitlab",
+        repoUrl: "https://gitlab.com/naufalnazeera22/perpustakaan-api",
+        cloneUrl: "https://gitlab.com/naufalnazeera22/perpustakaan-api.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+              RESTful API Architecture
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Layanan backend mandiri untuk mengelola pertukaran data sistem perpustakaan. Dirancang untuk dapat diintegrasikan dengan aplikasi mobile maupun web client dengan respons JSON yang cepat dan konsisten.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Endpoints RESTful terstruktur (CRUD data buku, kategori, dan anggota)</li>
+            <li>Autentikasi token untuk keamanan akses endpoint sensitif</li>
+            <li>Pagination responsif untuk pemanggilan data dalam jumlah besar</li>
+            <li>Validasi payload ketat &amp; penanganan error standar HTTP response</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP / Laravel, MySQL, REST API, JSON Web Token, Postman API Testing.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://gitlab.com/naufalnazeera22/perpustakaan-api.git</code>
+          </div>
+        `
+      },
+      mini_kasir_app: {
+        title: "MINI KASIR_APP",
+        subtitle: "Sistem Kasir Penjualan Toko &amp; POS Ritel",
+        icon: "fa-cash-register",
+        platform: "gitlab",
+        repoUrl: "https://gitlab.com/naufalnazeera22/mini-kasir-app",
+        cloneUrl: "https://gitlab.com/naufalnazeera22/mini-kasir-app.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              Point of Sale (POS)
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Aplikasi Point-of-Sale (POS) ringan yang dirancang untuk toko ritel dan minimarket skala UMKM guna mendigitalkan transaksi kasir dari pencatatan manual.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Antarmuka kasir cepat untuk input pesanan barang belanjaan</li>
+            <li>Kalkulasi subtotal, diskon, uang diterima, dan kembalian instan</li>
+            <li>Manajemen master produk (harga beli, harga jual, dan stok)</li>
+            <li>Rekapitulasi riwayat transaksi penjualan kasir</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP, MySQL, JavaScript DOM, Tailwind CSS / Bootstrap.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://gitlab.com/naufalnazeera22/mini-kasir-app.git</code>
+          </div>
+        `
+      },
+      toko_roti: {
+        title: "TOKO ROTI",
+        subtitle: "Aplikasi E-Commerce &amp; Pemesanan Toko Roti Online",
+        icon: "fa-bread-slice",
+        platform: "gitlab",
+        repoUrl: "https://gitlab.com/naufalnazeera22/apk-toko-roti",
+        cloneUrl: "https://gitlab.com/naufalnazeera22/apk-toko-roti.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              Bakery E-Commerce
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Sistem toko roti online yang memberikan pengalaman belanja mudah bagi pelanggan untuk memesan aneka varian roti dan kue secara praktis.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Galeri katalog produk roti dengan foto dan deskripsi rasa</li>
+            <li>Sistem keranjang belanja interaktif (Add to Cart &amp; Quantity)</li>
+            <li>Formulir checkout pesanan dengan estimasi biaya otomatis</li>
+            <li>Dashboard pemilik toko untuk update ketersediaan produk harian</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP / Laravel, MySQL, JavaScript ES6, CSS3 Modern.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://gitlab.com/naufalnazeera22/apk-toko-roti.git</code>
+          </div>
+        `
+      },
+      rental_mobil: {
+        title: "RENTAL MOBIL",
+        subtitle: "Sistem Informasi &amp; Manajemen Persewaan Kendaraan",
+        icon: "fa-car-side",
+        platform: "gitlab",
+        repoUrl: "https://gitlab.com/naufalnazeera22/rentalmobil",
+        cloneUrl: "https://gitlab.com/naufalnazeera22/rentalmobil.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+              Fleet Management System
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Aplikasi pengelolaan armada rental mobil untuk memonitor ketersediaan unit kendaraan, data penyewa, dan transaksi sewa secara terpusat.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Katalog armada kendaraan (spesifikasi, foto, dan tarif per hari)</li>
+            <li>Status unit kendaraan (Tersedia, Sedang Disewa, Dalam Perawatan)</li>
+            <li>Pencatatan data identitas penyewa dan jaminan sewa</li>
+            <li>Kalkulasi otomatis total biaya sewa berdasarkan durasi hari</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP, MySQL Relational, Bootstrap 5, JavaScript.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://gitlab.com/naufalnazeera22/rentalmobil.git</code>
+          </div>
+        `
+      },
+      ecomplaint: {
+        title: "E COMPLAINT MASYARAKAT",
+        subtitle: "Platform Layanan Pengaduan &amp; Aspirasi Publik Online",
+        icon: "fa-bullhorn",
+        platform: "gitlab",
+        repoUrl: "https://gitlab.com/naufalnazeera22/ecomplin-masyarakat",
+        cloneUrl: "https://gitlab.com/naufalnazeera22/ecomplin-masyarakat.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+              Public Service Platform
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Aplikasi keterbukaan informasi dan pengaduan masyarakat untuk mempercepat penanganan permasalahan fasilitas desa atau kelurahan secara transparan.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Formulir pengaduan warga dengan lampiran bukti foto/dokumen</li>
+            <li>Pelacakan status laporan (Terkirim, Diproses, Selesai Ditangani)</li>
+            <li>Kolom respon dan tanggapan dari dinas/petugas berwenang</li>
+            <li>Statistik kategori laporan pengaduan masyarakat</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP, MySQL, CSS3, JavaScript, File Upload Handler.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://gitlab.com/naufalnazeera22/ecomplin-masyarakat.git</code>
+          </div>
+        `
+      },
+      penduduk_desa: {
+        title: "APLIKASI PENDUDUK DESA",
+        subtitle: "Sistem Administrasi Kependudukan &amp; Demografi Desa",
+        icon: "fa-users-rectangle",
+        platform: "gitlab",
+        repoUrl: "https://gitlab.com/naufalnazeera22/aplikasi-penduduk-desa",
+        cloneUrl: "https://gitlab.com/naufalnazeera22/aplikasi-penduduk-desa.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200 flex items-center gap-1.5">
+              <i class="fa-brands fa-gitlab text-orange-500"></i> GitLab Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Village Administration
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Sistem basis data kependudukan desa untuk mengotomatisasi pencatatan arsip warga, mempermudah pelayanan surat pengantar, dan rekapitulasi data sensus.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Manajemen data induk kependudukan berbasis NIK dan No. KK</li>
+            <li>Pencatatan mutasi warga (kelahiran, kematian, pindah, datang)</li>
+            <li>Pencarian instan data penduduk dan cetak laporan administratif</li>
+            <li>Grafik ringkas demografi warga berdasarkan usia dan pekerjaan</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP, MySQL, DataTables, HTML5/CSS3, Admin Dashboard.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://gitlab.com/naufalnazeera22/aplikasi-penduduk-desa.git</code>
+          </div>
+        `
+      },
+      aplikasi_perpustakaan: {
+        title: "APLIKASI PERPUSTAKAAN",
+        subtitle: "Sistem Informasi Manajemen Perpustakaan Sekolah",
+        icon: "fa-book-bookmark",
+        platform: "github",
+        repoUrl: "https://github.com/NaufalMartinoAdistama/perpustakaan",
+        cloneUrl: "https://github.com/NaufalMartinoAdistama/perpustakaan.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-300 flex items-center gap-1.5">
+              <i class="fa-brands fa-github text-slate-900"></i> GitHub Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              Library System
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Aplikasi pengelolaan perpustakaan sekolah interaktif dengan antarmuka bersih dan responsif, memudahkan pustakawan dan siswa dalam sirkulasi peminjaman buku.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Katalogisasi buku berdasarkan ISBN, judul, penerbit, dan nomor rak</li>
+            <li>Live search koleksi buku cepat tanpa refresh halaman</li>
+            <li>Pencatatan sirkulasi peminjaman dan kalkulasi denda otomatis</li>
+            <li>Manajemen keanggotaan siswa dan riwayat bacaan</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">HTML5, CSS3, JavaScript ES6+, PHP, MySQL.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://github.com/NaufalMartinoAdistama/perpustakaan.git</code>
+          </div>
+        `
+      },
+      kasir_pos: {
+        title: "APLIKASI KASIR_POS",
+        subtitle: "Sistem Manajemen Kasir &amp; Inventori Ritel Modern",
+        icon: "fa-calculator",
+        platform: "github",
+        repoUrl: "https://github.com/NaufalMartinoAdistama/kasir_pos",
+        cloneUrl: "https://github.com/NaufalMartinoAdistama/kasir_pos.git",
+        content: `
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-300 flex items-center gap-1.5">
+              <i class="fa-brands fa-github text-slate-900"></i> GitHub Repository
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+              Point of Sale Pro
+            </span>
+          </div>
+          <h5 class="font-bold text-slate-900 mb-2">Ikhtisar Proyek:</h5>
+          <p class="mb-3">Aplikasi Point-of-Sale (POS) lengkap yang dirancang untuk kecepatan kasir dan keakuratan stok inventori barang ritel.</p>
+          
+          <h5 class="font-bold text-slate-900 mb-2">Fitur-Fitur Utama:</h5>
+          <ul class="list-disc pl-5 space-y-1 text-slate-600 mb-4">
+            <li>Antarmuka kasir cepat dengan shortcut keyboard dan dukungan barcode</li>
+            <li>Kalkulasi belanja instan, potongan harga promo, dan pajak</li>
+            <li>Pencatatan riwayat nota transaksi kasir secara terperinci</li>
+            <li>Manajemen master stok barang dan peringatan stok menipis</li>
+          </ul>
+
+          <h5 class="font-bold text-slate-900 mb-2">Tech Stack:</h5>
+          <p class="text-xs font-mono text-slate-500 mb-3">PHP, MySQL, JavaScript, Tailwind CSS, Local Storage.</p>
+
+          <h5 class="font-bold text-slate-900 mb-2">Git Clone Command:</h5>
+          <div class="p-3 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs flex items-center justify-between">
+            <code>git clone https://github.com/NaufalMartinoAdistama/kasir_pos.git</code>
+          </div>
+        `
+      }
+    };
+
+    const modal = document.getElementById('project-modal');
+    const modalContainer = document.getElementById('modal-container');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSubtitle = document.getElementById('modal-subtitle');
+    const modalIcon = document.getElementById('modal-icon');
+    const modalContent = document.getElementById('modal-content');
+    const modalRepoLink = document.getElementById('modal-repo-link');
+    const modalRepoIcon = document.getElementById('modal-repo-icon');
+    const modalRepoText = document.getElementById('modal-repo-text');
+    const modalCopyBtn = document.getElementById('modal-copy-clone');
+
+    let currentProjectCloneUrl = '';
+
+    function openProjectModal(projectId) {
+      const data = projectDetails[projectId];
+      if (!data) return;
+
+      modalTitle.textContent = data.title;
+      modalSubtitle.textContent = data.subtitle;
+      modalIcon.innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+      modalContent.innerHTML = data.content;
+
+      currentProjectCloneUrl = data.cloneUrl;
+
+      if (modalRepoLink) {
+        modalRepoLink.href = data.repoUrl;
+        if (data.platform === 'gitlab') {
+          modalRepoLink.className = "inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all";
+          if (modalRepoIcon) modalRepoIcon.className = "fa-brands fa-gitlab text-sm";
+          if (modalRepoText) modalRepoText.textContent = "Buka di GitLab ↗";
+        } else {
+          modalRepoLink.className = "inline-flex items-center gap-2 bg-slate-900 hover:bg-blue-600 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all";
+          if (modalRepoIcon) modalRepoIcon.className = "fa-brands fa-github text-sm";
+          if (modalRepoText) modalRepoText.textContent = "Buka di GitHub ↗";
+        }
+      }
+
+      if (modalCopyBtn) {
+        modalCopyBtn.onclick = function() {
+          copyToClipboard(currentProjectCloneUrl, 'URL Git Clone berhasil disalin!');
+        };
+      }
+
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalContainer.classList.remove('scale-95');
+      modalContainer.classList.add('scale-100');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProjectModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalContainer.classList.remove('scale-100');
+      modalContainer.classList.add('scale-95');
+      document.body.style.overflow = 'auto';
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeProjectModal();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeProjectModal();
+      }
+    });
+  </script>
+
+</body>
+</html>
